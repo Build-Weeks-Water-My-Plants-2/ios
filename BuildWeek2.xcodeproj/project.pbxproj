@@ -58,16 +58,24 @@
 		0BC01166249B010C00DB92FB /* BuildWeek2 */ = {
 			isa = PBXGroup;
 			children = (
-				0BC01167249B010C00DB92FB /* AppDelegate.swift */,
-				0BC01169249B010C00DB92FB /* SceneDelegate.swift */,
+				C218C686249C577C000475F4 /* Resource */,
 				0BC0116B249B010C00DB92FB /* ViewController.swift */,
 				0BC0116D249B010C00DB92FB /* Main.storyboard */,
-				0BC01170249B011100DB92FB /* Assets.xcassets */,
 				0BC01172249B011100DB92FB /* LaunchScreen.storyboard */,
-				0BC01175249B011100DB92FB /* Info.plist */,
 				0BC0117B249B013100DB92FB /* APIController.swift */,
 			);
 			path = BuildWeek2;
+			sourceTree = "<group>";
+		};
+		C218C686249C577C000475F4 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				0BC01167249B010C00DB92FB /* AppDelegate.swift */,
+				0BC01169249B010C00DB92FB /* SceneDelegate.swift */,
+				0BC01170249B011100DB92FB /* Assets.xcassets */,
+				0BC01175249B011100DB92FB /* Info.plist */,
+			);
+			path = Resource;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -289,7 +297,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = BuildWeek2/Info.plist;
+				INFOPLIST_FILE = BuildWeek2/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -306,7 +314,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = BuildWeek2/Info.plist;
+				INFOPLIST_FILE = BuildWeek2/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
