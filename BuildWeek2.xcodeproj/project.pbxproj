@@ -60,11 +60,19 @@
 			children = (
 				C218C686249C577C000475F4 /* Resources */,
 				C218C687249C585D000475F4 /* View Controllers */,
-				0BC0116D249B010C00DB92FB /* Main.storyboard */,
-				0BC01172249B011100DB92FB /* LaunchScreen.storyboard */,
+				0BFF13C1249C5D7300C8537A /* Storyboards */,
 				0BC0117B249B013100DB92FB /* APIController.swift */,
 			);
 			path = BuildWeek2;
+			sourceTree = "<group>";
+		};
+		0BFF13C1249C5D7300C8537A /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				0BC01172249B011100DB92FB /* LaunchScreen.storyboard */,
+				0BC0116D249B010C00DB92FB /* Main.storyboard */,
+			);
+			path = Storyboards;
 			sourceTree = "<group>";
 		};
 		C218C686249C577C000475F4 /* Resources */ = {
