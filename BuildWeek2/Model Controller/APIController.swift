@@ -18,18 +18,6 @@ enum NetworkError: Error{
     case noRep
 }
 
-// Temp model for our plant so that there are no errors. Will be deleted and functions changed when CoreData has been set up
-struct Plant {
-    let name: String
-    let identifier: UUID?
-    let plantRepresntation: PlantRepresentation?
-}
-
-struct PlantRepresentation: Codable, Equatable{
-    let name: String
-    let identifier: UUID?
-}
-
 class APIController {
     
     // MARK: - Properties
@@ -45,7 +33,7 @@ class APIController {
     
     // Adding plants to our database / Possibly also called when updating the plant in the database
     func addPlantToDatabase(plant: Plant, completion: @escaping CompletionHandler = { _ in }){
-        guard let uuid = plant.identifier else {
+        guard let uuid = plant.id else {
             completion(.failure(.noIdentifier))
             return
         }
@@ -55,7 +43,7 @@ class APIController {
         request.httpMethod = "PUT"
         
         do{
-            guard let representation = plant.plantRepresntation else{
+            guard let representation = plant.plantRepresentation else{
                 completion(.failure(.noRep))
                 return
             }
@@ -107,7 +95,7 @@ class APIController {
     
     // Removing plants from database
     func deletePlantsFromDatabase(_ plant: Plant, completion: @escaping CompletionHandler = { _ in }){
-        guard let uuid = plant.identifier else{
+        guard let uuid = plant.id else{
             completion(.failure(.noIdentifier))
             return
         }
@@ -134,7 +122,7 @@ class APIController {
         // Creating a new CoreData context so that we aren't saving to the main context while calling this inside of a URLSession. Uncomment once CoreData has been established
         //let context = CoreDataStack.shared.container.newBackgroundContext()
         // Creating an array of UUIDs
-        let identifiersToFetch = representations.compactMap({$0.identifier})
+        let identifiersToFetch = representations.compactMap({$0.id})
         let representationByID = Dictionary(uniqueKeysWithValues: zip(identifiersToFetch, representations))
         //Creating this next variable for later use
         var plantsToCreate = representationByID
