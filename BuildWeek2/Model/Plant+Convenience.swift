@@ -11,15 +11,16 @@ import CoreData
 
 extension Plant{
     // MARK: -  Properties
-    var plantRepresentation: PlantRepresentation {
-        return PlantRepresentation(id: id,
+    var plantRepresentation: PlantRepresentation?{
+        
+        return PlantRepresentation(id: Int(id),
                                    nickname: nickname ?? "",
                                    species: species ?? "",
-                                   h20Frequencey: h20Frequency,
-                                   userId: userId,
-                                   avatarUrl: avatarUrl ?? "",
+                                   h20Frequencey: Int(h20Frequency),
+                                   userId: Int(userId),
+                                   avatarUrl: avatarUrl,
                                    happiness: happiness,
-                                   lastWateredAt: lastWateredAt ?? Date())
+                                   lastWateredAt: lastWateredAt)
     }
     
     // MARK: - Convenience Initalizers
@@ -47,14 +48,14 @@ extension Plant{
     
     @discardableResult convenience init?(plantRepresentation: PlantRepresentation, context: NSManagedObjectContext = CoreDataStack.shared.mainContext){
         
-        self.init(id: plantRepresentation.id!,
+        self.init(id: Int16(plantRepresentation.id),
                   nickname: plantRepresentation.nickname,
                   species: plantRepresentation.species,
-                  h20Frequencey: plantRepresentation.h20Frequencey ?? 0,
-                  userId: plantRepresentation.userId!,
-                  avatarUrl: plantRepresentation.avatarUrl,
+                  h20Frequencey: Int16(plantRepresentation.h20Frequencey),
+                  userId: Int16(plantRepresentation.userId!),
+                  avatarUrl: plantRepresentation.avatarUrl ?? "",
                   happiness: plantRepresentation.happiness ?? false,
-                  lastWateredAt: plantRepresentation.lastWateredAt,
+                  lastWateredAt: plantRepresentation.lastWateredAt ?? Date(),
                   context: context)
     }
 }
