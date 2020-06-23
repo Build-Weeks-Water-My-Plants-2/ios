@@ -11,10 +11,11 @@ import CoreData
 
 extension Plant{
     // MARK: -  Properties
+    // If you already have a Plant, this will turn it into it's representation
     var plantRepresentation: PlantRepresentation?{
-        
+        guard let nickname = nickname else { return nil}
         return PlantRepresentation(id: Int(id),
-                                   nickname: nickname ?? "",
+                                   nickname: nickname,
                                    species: species ?? "",
                                    h20Frequencey: Int(h20Frequency),
                                    userId: Int(userId),
@@ -24,7 +25,6 @@ extension Plant{
     }
     
     // MARK: - Convenience Initalizers
-    
     // Plant data object Initalizer
     @discardableResult convenience init(id: Int16,
                                         nickname: String,
@@ -46,13 +46,13 @@ extension Plant{
         self.lastWateredAt = lastWateredAt
     }
     
+    // This will convert a PlantRepresentation into a Plant object for saving on Coredata
     @discardableResult convenience init?(plantRepresentation: PlantRepresentation, context: NSManagedObjectContext = CoreDataStack.shared.mainContext){
-        
         self.init(id: Int16(plantRepresentation.id),
                   nickname: plantRepresentation.nickname,
-                  species: plantRepresentation.species,
-                  h20Frequencey: Int16(plantRepresentation.h20Frequencey),
-                  userId: Int16(plantRepresentation.userId),
+                  species: plantRepresentation.species ?? "",
+                  h20Frequencey: Int16(plantRepresentation.h20Frequencey ?? 0),
+                  userId: Int16(plantRepresentation.userId ?? 0),
                   avatarUrl: plantRepresentation.avatarUrl ?? "",
                   happiness: plantRepresentation.happiness ?? false,
                   lastWateredAt: plantRepresentation.lastWateredAt ?? Date(),
