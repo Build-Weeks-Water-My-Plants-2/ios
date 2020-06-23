@@ -79,15 +79,16 @@ class APIController {
             }
             
             do{
-                let plantRepresentation = Array(try JSONDecoder().decode([String : PlantRepresentation].self, from: data).values)
+                let plantRepresentation = Array(try JSONDecoder().decode([Int : PlantRepresentation].self, from: data).values)
                 try self.updatePlants(with: plantRepresentation)
                 DispatchQueue.main.async {
                     completion(.success(true))
                 }
             } catch {
                 print("Error decoding plant representation: \(error)")
+                completion(.failure(.noDecode))
             }
-        }
+        }.resume()
     }
     
     // Removing plants from database
@@ -107,11 +108,11 @@ class APIController {
     
     // Creating a representation of our Plant Object
     private func update(plant: Plant, with representation: PlantRepresentation){
-        plant.id = Int16(representation.id)
+        //        plant.id = Int16(representation.id)
+        //        plant.userId = Int16(representation.userId ?? 0)
         plant.nickname = representation.nickname
         plant.species = representation.species
-        plant.h20Frequency = Int16(representation.h20Frequencey)
-        plant.userId = Int16(representation.userId)
+        plant.h20Frequency = Int16(representation.h20Frequencey ?? 0)
         plant.avatarUrl = representation.avatarUrl
         plant.happiness = representation.happiness ?? false
         plant.lastWateredAt = representation.lastWateredAt
@@ -119,27 +120,32 @@ class APIController {
     
     // Creating a function that will update our Plant Representation
     private func updatePlants(with representations: [PlantRepresentation]) throws {
-        // Creating a new CoreData context so that we aren't saving to the main context while calling this inside of a URLSession. Uncomment once CoreData has been established
+        // Creating a new CoreData context so that we aren't saving to the main context while calling this inside of a URLSession.
         let context = CoreDataStack.shared.container.newBackgroundContext()
         // Creating an array of UUIDs
-        let idsToFetch = representations.compactMap({$0.id})
+        let idsToFetch = representations.compactMap{Int16($0.id)}
         let representationByID = Dictionary(uniqueKeysWithValues: zip(idsToFetch, representations))
-        //Creating this next variable for later use
+        //Mutable copy of our dictonary to use for new Objects on the remote that we don't have locally
         var plantsToCreate = representationByID
         let fetchRequest: NSFetchRequest<Plant> = Plant.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id IN %@", idsToFetch)
         context.performAndWait {
             do{
                 let existingPlants = try context.fetch(fetchRequest)
-                
                 for plant in existingPlants{
                     let id = plant.id
-                    let representation = representationByID[id]
+                    guard let representation = representationByID[id] else { continue }
                     self.update(plant: plant, with: representation)
+                    plantsToCreate.removeValue(forKey: id)
+                }
+                //plantsToCreate should now contain values that we don't have in core data
+                for representation in plantsToCreate.values {
+                    Plant(plantRepresentation: representation, context: context)
                 }
             } catch {
                 print("Error fetching plants for ids: \(error)")
             }
         }
+        try CoreDataStack.shared.save()
     }
 }
