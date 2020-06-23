@@ -52,7 +52,7 @@ extension Plant{
                   nickname: plantRepresentation.nickname,
                   species: plantRepresentation.species,
                   h20Frequencey: Int16(plantRepresentation.h20Frequencey),
-                  userId: Int16(plantRepresentation.userId!),
+                  userId: Int16(plantRepresentation.userId),
                   avatarUrl: plantRepresentation.avatarUrl ?? "",
                   happiness: plantRepresentation.happiness ?? false,
                   lastWateredAt: plantRepresentation.lastWateredAt ?? Date(),
