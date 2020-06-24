@@ -9,23 +9,29 @@
 /* Begin PBXBuildFile section */
 		0BC01168249B010C00DB92FB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC01167249B010C00DB92FB /* AppDelegate.swift */; };
 		0BC0116A249B010C00DB92FB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC01169249B010C00DB92FB /* SceneDelegate.swift */; };
-		0BC0116C249B010C00DB92FB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC0116B249B010C00DB92FB /* ViewController.swift */; };
 		0BC0116F249B010C00DB92FB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BC0116D249B010C00DB92FB /* Main.storyboard */; };
 		0BC01171249B011100DB92FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BC01170249B011100DB92FB /* Assets.xcassets */; };
 		0BC01174249B011100DB92FB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BC01172249B011100DB92FB /* LaunchScreen.storyboard */; };
 		0BC0117C249B013100DB92FB /* APIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC0117B249B013100DB92FB /* APIController.swift */; };
+		AB25058A24A1A1730030E14F /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB25058924A1A1730030E14F /* LoginViewController.swift */; };
+		AB25058C24A1A1920030E14F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB25058B24A1A1920030E14F /* DetailViewController.swift */; };
+		AB39D0C924A29A0C0075FC54 /* PlantTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB39D0C824A29A0C0075FC54 /* PlantTableViewController.swift */; };
+		AB39D0CB24A2C2640075FC54 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB39D0CA24A2C2640075FC54 /* ProfileViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0BC01164249B010C00DB92FB /* BuildWeek2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BuildWeek2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BC01167249B010C00DB92FB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0BC01169249B010C00DB92FB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		0BC0116B249B010C00DB92FB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		0BC0116E249B010C00DB92FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0BC01170249B011100DB92FB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0BC01173249B011100DB92FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0BC01175249B011100DB92FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0BC0117B249B013100DB92FB /* APIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIController.swift; sourceTree = "<group>"; };
+		AB25058924A1A1730030E14F /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		AB25058B24A1A1920030E14F /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		AB39D0C824A29A0C0075FC54 /* PlantTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantTableViewController.swift; sourceTree = "<group>"; };
+		AB39D0CA24A2C2640075FC54 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,7 +103,10 @@
 		C218C687249C585D000475F4 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				0BC0116B249B010C00DB92FB /* ViewController.swift */,
+				AB25058924A1A1730030E14F /* LoginViewController.swift */,
+				AB39D0C824A29A0C0075FC54 /* PlantTableViewController.swift */,
+				AB25058B24A1A1920030E14F /* DetailViewController.swift */,
+				AB39D0CA24A2C2640075FC54 /* ProfileViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -174,9 +183,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				0BC0117C249B013100DB92FB /* APIController.swift in Sources */,
-				0BC0116C249B010C00DB92FB /* ViewController.swift in Sources */,
 				0BC01168249B010C00DB92FB /* AppDelegate.swift in Sources */,
+				AB25058C24A1A1920030E14F /* DetailViewController.swift in Sources */,
+				AB25058A24A1A1730030E14F /* LoginViewController.swift in Sources */,
+				AB39D0CB24A2C2640075FC54 /* ProfileViewController.swift in Sources */,
 				0BC0116A249B010C00DB92FB /* SceneDelegate.swift in Sources */,
+				AB39D0C924A29A0C0075FC54 /* PlantTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,7 +333,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = T9X472M6U2;
 				INFOPLIST_FILE = BuildWeek2/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -338,7 +352,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = T9X472M6U2;
 				INFOPLIST_FILE = BuildWeek2/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
