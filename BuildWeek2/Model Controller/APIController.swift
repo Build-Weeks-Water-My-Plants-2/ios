@@ -1,11 +1,3 @@
-//
-//  APIController.swift
-//  BuildWeek2
-//
-//  Created by Clayton Watkins on 6/17/20.
-//  Copyright © 2020 Clayton Watkins. All rights reserved.
-//
-
 import Foundation
 import CoreData
 
@@ -20,13 +12,18 @@ enum NetworkError: Error{
 
 class APIController {
     
+    
     // MARK: - Properties
+    
     private let baseURL = URL(string: "URL GOES HERE")!
     typealias CompletionHandler = (Result<Bool, NetworkError>) -> Void
+    
+    
     // MARK: - Initializer
     init(){
         self.fetchPlantsFromDatabase()
     }
+    
     
     //MARK: - Networking Functions
     
