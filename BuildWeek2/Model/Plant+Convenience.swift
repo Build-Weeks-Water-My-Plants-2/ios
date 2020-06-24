@@ -10,6 +10,7 @@ import Foundation
 import CoreData
 
 extension Plant{
+    
     // MARK: -  Properties
     // If you already have a Plant, this will turn it into it's representation
     var plantRepresentation: PlantRepresentation?{
