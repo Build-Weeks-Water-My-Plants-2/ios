@@ -9,8 +9,11 @@
 import Foundation
 import CoreData
 
-// I'm not sure if we will need this, but I wanted to make sure we had it anyways.
 extension User {
+    //MARK: - Properties
+    var userRepresentation: UserRepresentation? {
+    }
+    
     // MARK: - Convenience Initalizers
     // User data object Initializer
     @discardableResult convenience init(id: Int16,
