@@ -15,6 +15,12 @@ enum LoginType {
 
 
 class LoginViewController: UIViewController {
+    
+    
+    // MARK: - Properties
+    
+    
+    // MARK: - IBOutlets
 
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
@@ -22,10 +28,16 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var signInButton: UIButton!
     
     
+    // MARK: - App Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
     }
+    
+    
+    // MARK: - IBActions
+    
     @IBAction func buttonTapped(_ sender: UIButton) {
         
     }
