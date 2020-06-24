@@ -23,7 +23,6 @@ class APIController {
     // MARK: - Properties
     private let baseURL = URL(string: "URL GOES HERE")!
     typealias CompletionHandler = (Result<Bool, NetworkError>) -> Void
-    
     // MARK: - Initializer
     init(){
         self.fetchPlantsFromDatabase()
