@@ -12,6 +12,12 @@ import CoreData
 extension User {
     //MARK: - Properties
     var userRepresentation: UserRepresentation? {
+        guard let username = username,
+            let password = password,
+            let phoneNumber = phoneNumber,
+            let avatarUrl = avatarUrl
+            else { return nil }
+        return UserRepresentation(id: Int(id), username: username, password: password, phoneNumber: phoneNumber, avatarUrl: avatarUrl)
     }
     
     // MARK: - Convenience Initalizers
@@ -29,4 +35,14 @@ extension User {
         self.phoneNumber = phoneNumber
         self.avatarUrl = avatarUrl
     }
+    
+    @discardableResult convenience init?(userRepresentation: UserRepresentation, context: NSManagedObjectContext = CoreDataStack.shared.mainContext){
+        self.init(id: Int16(userRepresentation.id),
+                  username: userRepresentation.username,
+                  password: userRepresentation.password,
+                  phoneNumber: userRepresentation.phoneNumber ?? "",
+                  avatarUrl: userRepresentation.avatarUrl ?? "",
+                  context: context)
+    }
+    
 }
