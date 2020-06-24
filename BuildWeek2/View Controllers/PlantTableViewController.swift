@@ -11,7 +11,12 @@ import UIKit
 class PlantTableViewController: UITableViewController {
 
     let reuseIdentifier = "PlantCell"
-    
+    let apiController: APIController = APIController()
+    private var plants: [Plant] = [] {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
