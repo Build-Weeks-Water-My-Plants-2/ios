@@ -18,44 +18,26 @@ enum NetworkError: Error{
     case noRep
 }
 
-// Temp model for our plant so that there are no errors. Will be deleted and functions changed when CoreData has been set up
-struct Plant {
-    let name: String
-    let identifier: UUID?
-    let plantRepresntation: PlantRepresentation?
-}
-
-struct PlantRepresentation: Codable, Equatable{
-    let name: String
-    let identifier: UUID?
-}
-
 class APIController {
     
     // MARK: - Properties
     private let baseURL = URL(string: "URL GOES HERE")!
     typealias CompletionHandler = (Result<Bool, NetworkError>) -> Void
-    
     // MARK: - Initializer
     init(){
-        // TODO: - Fetch plants from server
+        self.fetchPlantsFromDatabase()
     }
     
     //MARK: - Networking Functions
     
     // Adding plants to our database / Possibly also called when updating the plant in the database
     func addPlantToDatabase(plant: Plant, completion: @escaping CompletionHandler = { _ in }){
-        guard let uuid = plant.identifier else {
-            completion(.failure(.noIdentifier))
-            return
-        }
-        
-        let requestURL = baseURL.appendingPathComponent(uuid.uuidString).appendingPathExtension("json")
+        let requestURL = baseURL.appendingPathComponent(String(plant.id)).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
         do{
-            guard let representation = plant.plantRepresntation else{
+            guard let representation = plant.plantRepresentation else{
                 completion(.failure(.noRep))
                 return
             }
@@ -94,24 +76,23 @@ class APIController {
                 completion(.failure(.noData))
                 return
             }
-            // TODO - Use an do try catch to decode our object from the database and pass that into our update function so we can check
-            // if we have that object saved in our persistence, if not it will be added
-//            do{
-//                let plantRepresentation = Array(try JSONDecoder().decode([String : PlantRepresentation].self, from: data).values)
-//                try
-//            } catch {
-//
-//            }
-        }
+            
+            do{
+                let plantRepresentation = Array(try JSONDecoder().decode([Int : PlantRepresentation].self, from: data).values)
+                try self.updatePlants(with: plantRepresentation)
+                DispatchQueue.main.async {
+                    completion(.success(true))
+                }
+            } catch {
+                print("Error decoding plant representation: \(error)")
+                completion(.failure(.noDecode))
+            }
+        }.resume()
     }
     
     // Removing plants from database
     func deletePlantsFromDatabase(_ plant: Plant, completion: @escaping CompletionHandler = { _ in }){
-        guard let uuid = plant.identifier else{
-            completion(.failure(.noIdentifier))
-            return
-        }
-        let requestURL = baseURL.appendingPathComponent(uuid.uuidString).appendingPathExtension("json")
+        let requestURL = baseURL.appendingPathComponent(String(plant.id)).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "DELETE"
         
@@ -126,18 +107,44 @@ class APIController {
     
     // Creating a representation of our Plant Object
     private func update(plant: Plant, with representation: PlantRepresentation){
-        // TODO: - Create Plant Representation that mimics our Plant model once it's created
+        //        plant.id = Int16(representation.id)
+        //        plant.userId = Int16(representation.userId ?? 0)
+        plant.nickname = representation.nickname
+        plant.species = representation.species
+        plant.h20Frequency = Int16(representation.h20Frequencey ?? 0)
+        plant.avatarUrl = representation.avatarUrl
+        plant.happiness = representation.happiness ?? false
+        plant.lastWateredAt = representation.lastWateredAt
     }
     
     // Creating a function that will update our Plant Representation
     private func updatePlants(with representations: [PlantRepresentation]) throws {
-        // Creating a new CoreData context so that we aren't saving to the main context while calling this inside of a URLSession. Uncomment once CoreData has been established
-        //let context = CoreDataStack.shared.container.newBackgroundContext()
+        // Creating a new CoreData context so that we aren't saving to the main context while calling this inside of a URLSession.
+        let context = CoreDataStack.shared.container.newBackgroundContext()
         // Creating an array of UUIDs
-        let identifiersToFetch = representations.compactMap({$0.identifier})
-        let representationByID = Dictionary(uniqueKeysWithValues: zip(identifiersToFetch, representations))
-        //Creating this next variable for later use
+        let idsToFetch = representations.compactMap{Int16($0.id)}
+        let representationByID = Dictionary(uniqueKeysWithValues: zip(idsToFetch, representations))
+        //Mutable copy of our dictonary to use for new Objects on the remote that we don't have locally
         var plantsToCreate = representationByID
-        // TODO: - Finish rest of function once CoreData has been established so that we can create a fetchRequest and an NSPredicate
+        let fetchRequest: NSFetchRequest<Plant> = Plant.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id IN %@", idsToFetch)
+        context.performAndWait {
+            do{
+                let existingPlants = try context.fetch(fetchRequest)
+                for plant in existingPlants{
+                    let id = plant.id
+                    guard let representation = representationByID[id] else { continue }
+                    self.update(plant: plant, with: representation)
+                    plantsToCreate.removeValue(forKey: id)
+                }
+                //plantsToCreate should now contain values that we don't have in core data
+                for representation in plantsToCreate.values {
+                    Plant(plantRepresentation: representation, context: context)
+                }
+            } catch {
+                print("Error fetching plants for ids: \(error)")
+            }
+        }
+        try CoreDataStack.shared.save()
     }
 }
