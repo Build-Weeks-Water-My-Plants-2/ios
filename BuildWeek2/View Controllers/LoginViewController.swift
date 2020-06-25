@@ -2,56 +2,46 @@ import UIKit
 
 class LoginViewController: UIViewController {
     
-    
     // MARK: - Enums
     
     enum LoginType {
         case signUp
-        case SIgnIn
+        case signIn
     }
-
     
     // MARK: - Properties
     
-    let apiController = APIController()
-    
+    let apiController = APIController.shared
+    var loginType = LoginType.signUp
     
     // MARK: - IBOutlets
 
-    @IBOutlet weak var usernameTextField: UITextField!
-    @IBOutlet weak var passwordTextField: UITextField!
-    @IBOutlet weak var loginTypeSegmentedControl: UISegmentedControl!
-    @IBOutlet weak var signInButton: UIButton!
-    
-    var apiController: APIController?
-    var loginType = LoginType.signUp
-    struct User {
-        var username: String
-        var password: String
-        
-    }
+    @IBOutlet private weak var usernameTextField: UITextField!
+    @IBOutlet private weak var passwordTextField: UITextField!
+    @IBOutlet private weak var loginTypeSegmentedControl: UISegmentedControl!
+    @IBOutlet private weak var signInButton: UIButton!
     
     // MARK: - App Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
-    
     
     // MARK: - IBActions
     
     @IBAction func buttonTapped(_ sender: UIButton) {
-        
-        let testUser = UserRepresentation(id: nil, username: "jholowesko69", password: "123456", phoneNumber: nil, avatarUrl: nil)
-        
-        apiController.signUp(with: testUser) { (_) in
-            
+        guard let inputedUsername = usernameTextField.text,
+            let inputedPassword = passwordTextField.text else {
+                print("Bad input")
+                return
         }
+        
+        let tempUserRepresentation = UserRepresentation(id: nil, username: inputedUsername, password: inputedPassword, phoneNumber: nil, avatarUrl: nil)
+        
+        
     }
     
-    @IBAction func signInTypeChanged(_ sender: UISegmentedControl) {
-        // switch UI between modes
+    @IBAction func loginTypeChanged(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
             loginType = .signUp
             signInButton.setTitle("Sign Up", for: .normal)
