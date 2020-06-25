@@ -36,7 +36,7 @@ class LoginViewController: UIViewController {
     
     @IBAction func buttonTapped(_ sender: UIButton) {
         
-        let testUser = UserRepresentation(id: 1, username: "jholowesko", password: "123456", phoneNumber: nil, avatarUrl: nil)
+        let testUser = UserRepresentation(id: nil, username: "jholowesko69", password: "123456", phoneNumber: nil, avatarUrl: nil)
         
         apiController.signUp(with: testUser) { (_) in
             
