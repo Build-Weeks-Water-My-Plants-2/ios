@@ -1,31 +1,108 @@
 import Foundation
 import CoreData
 
-enum NetworkError: Error{
-    case noIdentifier
-    case otherError
-    case noData
-    case noDecode
-    case noEncode
-    case noRep
-}
-
 class APIController {
+    
+    
+    // MARK: - Enums
+    
+    enum NetworkError: Error {
+        case noIdentifier
+        case otherError
+        case noData
+        case noDecode
+        case noEncode
+        case noRep
+        case failedSignUp
+        case failedSignIn
+        case noToken
+        case tryAgain
+        case invalidURL
+        case invalidImageData
+    }
+    
+    enum HTTPMethod: String {
+        case get = "GET"
+        case put = "PUT"
+        case post = "POST"
+    }
     
     
     // MARK: - Properties
     
-    private let baseURL = URL(string: "URL GOES HERE")!
+    private let baseURL = URL(string: "https://stark-sierra-74070.herokuapp.com")!
+    private lazy var signUpURL = baseURL.appendingPathComponent("/auth/register")
+    private lazy var signInURL = baseURL.appendingPathComponent("/auth/login")
+    
+    var bearer: Bearer?
+    
     typealias CompletionHandler = (Result<Bool, NetworkError>) -> Void
     
     
     // MARK: - Initializer
+    
     init(){
         self.fetchPlantsFromDatabase()
     }
     
     
-    //MARK: - Networking Functions
+    // MARK: - Networking Functions
+    
+    func signUp(with user: UserRepresentation, completion: @escaping (Result<Bool, NetworkError>) -> Void) {
+        
+        /// Request URL
+        var request = URLRequest(url: signUpURL)
+        request.httpMethod = HTTPMethod.post.rawValue
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        /// Pass in Username & Password in HTTPBody
+        do {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            let jsonData = try encoder.encode(user)
+            print(String(data: jsonData, encoding: .utf8)!)
+            request.httpBody = jsonData
+            
+            /// URL Data Task
+            URLSession.shared.dataTask(with: request) { (data, response, error) in
+                
+                // Error Check
+                if let error = error {
+                    print("Sign Up failed with error: \(error)")
+                    completion(.failure(.failedSignUp))
+                    return
+                }
+
+                // Check for Data
+                guard let data = data else {
+                    print("Data was not recieved")
+                    completion(.failure(.failedSignIn))
+                    return
+                }
+                
+                if let response = response {
+                    print(response)
+                }
+                
+                // Decode Data (Bearer Token)
+                do{
+                    let decoder = JSONDecoder()
+                    self.bearer = try decoder.decode(Bearer.self, from: data)
+                    completion(.success(true))
+                } catch {
+                    print("Error decoding bearer: \(error)")
+                    completion(.failure(.noToken))
+                    return
+                }
+                
+                completion(.success(true))
+            }.resume()
+            
+        } catch {
+            print("Error signing up user: \(error)")
+            completion(.failure(.failedSignUp))
+        }
+    }
     
     // Adding plants to our database / Possibly also called when updating the plant in the database
     func addPlantToDatabase(plant: Plant, completion: @escaping CompletionHandler = { _ in }){
