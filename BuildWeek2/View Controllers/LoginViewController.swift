@@ -1,29 +1,19 @@
-//
-//  LoginViewController.swift
-//  BuildWeek2
-//
-//  Created by Clean Mac on 6/22/20.
-//  Copyright © 2020 Clayton Watkins. All rights reserved.
-//
-
 import UIKit
-
-enum LoginType {
-    case signUp
-    case signIn
-    
-    struct User {
-        var username: String
-        var password: String
-        
-    }
-}
-
 
 class LoginViewController: UIViewController {
     
     
+    // MARK: - Enums
+    
+    enum LoginType {
+        case signUp
+        case SIgnIn
+    }
+
+    
     // MARK: - Properties
+    
+    let apiController = APIController()
     
     
     // MARK: - IBOutlets
@@ -53,55 +43,10 @@ class LoginViewController: UIViewController {
     
     @IBAction func buttonTapped(_ sender: UIButton) {
         
+        let testUser = UserRepresentation(id: nil, username: "jholowesko69", password: "123456", phoneNumber: nil, avatarUrl: nil)
         
-        if let username = usernameTextField.text,
-            !username.isEmpty,
-            let password = passwordTextField.text,
-            !password.isEmpty {
-            let user = User(username: username, password: password)
-            if loginType == .signUp {
-                apiController?.signUp(with: user, completion: { (result) in
-                    do {
-                        let success = try result.get()
-                        if success {
-                            DispatchQueue.main.async {
-                                let alertController = UIAlertController(title: "Sign Up Successful", message: "Now please log in.", preferredStyle: .alert)
-                                let alertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
-                                alertController.addAction(alertAction)
-                                self.present(alertController, animated: true) {
-                                    self.loginType = .signIn
-                                    self.loginTypeSegmentedControl.selectedSegmentIndex = 1
-                                    self.signInButton.setTitle("Sign In", for: .normal)
-                                }
-                            }
-                        }
-                    } catch {
-                        print("Error signing up: \(error)")
-                    }
-                })
-            } else {
-                apiController?.signIn(with: user, completion: { (result) in
-                    do {
-                        let success = try result.get()
-                        if success {
-                            DispatchQueue.main.async {
-                                self.dismiss(animated: true, completion: nil)
-                            }
-                        }
-                    } catch {
-                        if let error = error as? APIController.NetworkError {
-                            switch error {
-                            case .failedSignIn:
-                                print("Sign in failed")
-                            case .noToken, .noData:
-                                print("No data received")
-                            default:
-                                print("Other error occurred")
-                            }
-                        }
-                    }
-                })
-            }
+        apiController.signUp(with: testUser) { (_) in
+            
         }
     }
     
