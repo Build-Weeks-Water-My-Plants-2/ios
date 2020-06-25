@@ -200,6 +200,10 @@
                                             <segment title="Sign Up"/>
                                             <segment title="Sign In"/>
                                         </segments>
+                                        <connections>
+                                            <action selector="loginType:" destination="dPL-su-52T" eventType="valueChanged" id="I7j-uL-hXo"/>
+                                            <action selector="loginTypeChanged:" destination="dPL-su-52T" eventType="valueChanged" id="Jre-R0-IUH"/>
+                                        </connections>
                                     </segmentedControl>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="ygR-ue-Iga">
                                         <rect key="frame" x="20" y="130" width="334" height="54.5"/>

@@ -1,11 +1,3 @@
-//
-//  PlantTableViewController.swift
-//  BuildWeek2
-//
-//  Created by Clean Mac on 6/23/20.
-//  Copyright © 2020 Clayton Watkins. All rights reserved.
-//
-
 import UIKit
 import CoreData
 
