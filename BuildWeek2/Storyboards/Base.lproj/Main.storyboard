@@ -357,6 +357,8 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="plantImageView" destination="rDN-pW-MaG" id="gfE-ab-wGg"/>
+                                    <outlet property="plantLabel" destination="cZK-ID-GcS" id="Z8v-NE-NKj"/>
                                     <segue destination="SU6-ee-iqj" kind="show" identifier="ShowDetailSegue" id="uXL-Af-0NW"/>
                                 </connections>
                             </tableViewCell>
@@ -367,6 +369,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Plant Parenthood" id="27p-Nw-IUJ">
+                        <barButtonItem key="leftBarButtonItem" title="Refresh" id="NhV-bd-1hT">
+                            <connections>
+                                <action selector="refreshButtonTapped:" destination="w89-oX-ln3" id="jUf-JC-v7j"/>
+                            </connections>
+                        </barButtonItem>
                         <rightBarButtonItems>
                             <barButtonItem title="Item" image="plus" catalog="system" id="w0L-sd-6CV">
                                 <connections>
@@ -375,7 +382,7 @@
                             </barButtonItem>
                             <barButtonItem title="Item" image="person.circle" catalog="system" id="Eds-1S-MSt">
                                 <connections>
-                                    <segue destination="sqK-F9-Oog" kind="show" id="6GP-s2-WiN"/>
+                                    <segue destination="sqK-F9-Oog" kind="show" identifier="ShowProfileSegue" id="6GP-s2-WiN"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
