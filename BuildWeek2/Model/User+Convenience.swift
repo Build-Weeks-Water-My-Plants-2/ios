@@ -37,7 +37,7 @@ extension User {
     }
     
     @discardableResult convenience init?(userRepresentation: UserRepresentation, context: NSManagedObjectContext = CoreDataStack.shared.mainContext){
-        self.init(id: Int16(userRepresentation.id),
+        self.init(id: Int16(userRepresentation.id ?? 1),
                   username: userRepresentation.username,
                   password: userRepresentation.password,
                   phoneNumber: userRepresentation.phoneNumber ?? "",
