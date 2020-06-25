@@ -30,7 +30,7 @@ class APIController {
     
     // MARK: - Properties
     
-    private let baseURL = URL(string: "https://plant-app-pt13.herokuapp.com")!
+    private let baseURL = URL(string: "https://stark-sierra-74070.herokuapp.com")!
     private lazy var signUpURL = baseURL.appendingPathComponent("/auth/register")
     private lazy var signInURL = baseURL.appendingPathComponent("/auth/login")
     
@@ -53,8 +53,9 @@ class APIController {
         /// Request URL
         var request = URLRequest(url: signUpURL)
         request.httpMethod = HTTPMethod.post.rawValue
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        /// Passing Username & Password in HTTPBody
+        /// Pass in Username & Password in HTTPBody
         do {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
@@ -63,7 +64,7 @@ class APIController {
             request.httpBody = jsonData
             
             /// URL Data Task
-            URLSession.shared.dataTask(with: request) { (data, _, error) in
+            URLSession.shared.dataTask(with: request) { (data, response, error) in
                 
                 // Error Check
                 if let error = error {
@@ -77,6 +78,10 @@ class APIController {
                     print("Data was not recieved")
                     completion(.failure(.failedSignIn))
                     return
+                }
+                
+                if let response = response {
+                    print(response)
                 }
                 
                 // Decode Data (Bearer Token)
