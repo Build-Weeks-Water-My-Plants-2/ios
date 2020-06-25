@@ -23,12 +23,19 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var loginTypeSegmentedControl: UISegmentedControl!
     @IBOutlet weak var signInButton: UIButton!
     
+    var apiController: APIController?
+    var loginType = LoginType.signUp
+    struct User {
+        var username: String
+        var password: String
+        
+    }
     
     // MARK: - App Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
     }
     
     
@@ -44,8 +51,13 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func signInTypeChanged(_ sender: UISegmentedControl) {
-        
+        // switch UI between modes
+        if sender.selectedSegmentIndex == 0 {
+            loginType = .signUp
+            signInButton.setTitle("Sign Up", for: .normal)
+        } else {
+            loginType = .signIn
+            signInButton.setTitle("Sign In", for: .normal)
+        }
     }
-    
-
 }
