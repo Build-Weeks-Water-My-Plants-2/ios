@@ -9,21 +9,32 @@
 import UIKit
 
 class PlantTableViewController: UITableViewController {
+    
+    
+    // MARK: - Properties
+    
+    let apiController = APIController()
 
     let reuseIdentifier = "PlantCell"
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-     
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if apiController.bearer == nil {
+            performSegue(withIdentifier: "SignInSegue", sender: self)
+        }
+    }
+    
 
     // MARK: - Table view data source
 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return 0
     }
 
     /*
