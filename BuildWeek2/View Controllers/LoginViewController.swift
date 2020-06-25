@@ -7,13 +7,12 @@ class LoginViewController: UIViewController {
     
     enum LoginType {
         case signUp
-        case SIgnIn
+        case signIn
     }
 
     
     // MARK: - Properties
     
-    let apiController = APIController()
     
     
     // MARK: - IBOutlets
@@ -42,12 +41,7 @@ class LoginViewController: UIViewController {
     // MARK: - IBActions
     
     @IBAction func buttonTapped(_ sender: UIButton) {
-        
-        let testUser = UserRepresentation(id: nil, username: "jholowesko69", password: "123456", phoneNumber: nil, avatarUrl: nil)
-        
-        apiController.signUp(with: testUser) { (_) in
-            
-        }
+    
     }
     
     @IBAction func signInTypeChanged(_ sender: UISegmentedControl) {
