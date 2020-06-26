@@ -58,6 +58,7 @@ class APIController {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
             let jsonData = try encoder.encode(user)
+            print(String(data: jsonData, encoding:  .utf8)!)
             request.httpBody = jsonData
             
             /// URL Data Task
@@ -89,14 +90,14 @@ class APIController {
                 do {
                     let decoder = JSONDecoder()
                     self.bearer = try decoder.decode(Bearer.self, from: data)
-                    completion(nil)
+                    completion(self.bearer)
                 } catch {
                     print("Error decoding bearer: \(error)")
                     completion(nil)
                     return
                 }
                 
-                completion(self.bearer)
+                //                completion(self.bearer)
             }.resume()
             
         } catch {
@@ -136,13 +137,14 @@ class APIController {
                 do{
                     let decoder = JSONDecoder()
                     self.bearer = try decoder.decode(Bearer.self, from: data)
+                    print(self.bearer)
                     completion(.success(true))
                 } catch {
                     print("Error Decoding bearer: \(error)")
                     completion(.failure(.noToken))
                     return
                 }
-            }
+            } .resume()
         } catch {
             print("Error encoding user: \(error)")
             completion(.failure(.failedSignIn))
@@ -154,7 +156,7 @@ class APIController {
     func addPlantToDatabase(plant: Plant, completion: @escaping NetworkCompletionHandler = { _ in }) {
         let requestURL = baseURL.appendingPathComponent(String(plant.id)).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
-        request.httpMethod = "PUT"
+        request.httpMethod = "POST"
         
         guard let bearer = bearer else {
             print("No bearer token")
@@ -167,17 +169,26 @@ class APIController {
                 completion(.failure(.noRep))
                 return
             }
-            request.httpBody = try JSONEncoder().encode(representation)
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            let jsonData = try encoder.encode(representation)
+            print(String(data: jsonData, encoding:  .utf8)!)
+            request.httpBody = jsonData
+            
         } catch {
             print("Error encoding Plant \(plant): \(error)")
             completion(.failure(.noEncode))
         }
         
-        URLSession.shared.dataTask(with: request) { _, _, error in
+        URLSession.shared.dataTask(with: request) { _, response, error in
             if let error = error {
                 completion(.failure(.otherError))
                 print("Error putting plant to server: \(error)")
                 return
+            }
+            
+            if let response = response {
+                print(response)
             }
             
             DispatchQueue.main.async {

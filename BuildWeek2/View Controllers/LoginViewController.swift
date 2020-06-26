@@ -38,22 +38,14 @@ class LoginViewController: UIViewController {
                 print("Bad input")
                 return
         }
-            let newUser = UserRepresentation(id: nil,
-                                             username: inputedUsername,
-                                             password: inputedPassword,
-                                             phoneNumber: nil,
-                                             avatarUrl: nil,
-                                             bearer: apiController.bearer?.token)
-            
+        let newUser = UserRepresentation(id: nil,
+                                         username: inputedUsername,
+                                         password: inputedPassword,
+                                         phoneNumber: nil,
+                                         avatarUrl: nil,
+                                         bearer: apiController.bearer?.token)
+        if loginType == .signUp{
             apiController.signUp(with: newUser) { bearerToken in
-                
-                //            var newUser1 = UserRepresentation(id: nil,
-                //                                             username: inputedUsername,
-                //                                             password: inputedPassword,
-                //                                             phoneNumber: nil,
-                //                                             avatarUrl: nil,
-                //                                             bearer: self.apiController.bearer?.token)
-                
                 var userToSave = User(userRepresentation: newUser, context: self.moc)
                 
                 do {
@@ -64,22 +56,30 @@ class LoginViewController: UIViewController {
                 }
             }
             #warning("Make dat Alert")
+        } else {
+            apiController.signIn(with: newUser) { result in
+                do {
+                    let success = try result.get()
+                    if success{
+                        DispatchQueue.main.async {
+                            self.dismiss(animated: true, completion: nil)
+                        }
+                    }
+                } catch {
+                    if let error = error as? APIController.NetworkError {
+                        switch error {
+                        case .failedSignIn:
+                            print("sign in failed")
+                        case .noToken, .noData:
+                            print("no data recieved")
+                        default:
+                            print("Other error occured")
+                        }
+                    }
+                }
+            }
             self.dismiss(animated: true, completion: nil)
-//        } else if loginType == .signIn{
-//            let returningUser = UserRepresentation(id: nil, username: inputedUsername, password: inputedPassword, phoneNumber: nil, avatarUrl: nil, bearer: nil)
-//            apiController.signIn(with: returningUser) { result in
-//                do{
-//                    let success = try result.get()
-//                    if success{
-//                        DispatchQueue.main.async {
-//                            self.dismiss(animated: true, completion: nil)
-//                        }
-//                    }
-//                } catch {
-//                    print("\(error)")
-//                }
-//            }
-//        }
+        }
     }
     @IBAction func loginTypeChanged(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {

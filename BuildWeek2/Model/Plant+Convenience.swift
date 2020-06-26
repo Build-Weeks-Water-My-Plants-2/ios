@@ -7,6 +7,10 @@ extension Plant {
     
     // If you already have a Plant, this will turn it into it's representation
     var plantRepresentation: PlantRepresentation? {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        formatter.dateStyle = .short
+        let today = Date()
         guard let nickname = nickname else { return nil }
         return PlantRepresentation(id: Int(id),
                                    nickname: nickname,
@@ -26,7 +30,6 @@ extension Plant {
         h20Frequencey: Int16,
         avatarUrl: String,
         happiness: Bool,
-        lastWateredAt: Date = Date(),
         context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
         self.init(context: context)
         self.nickname = nickname
@@ -34,7 +37,6 @@ extension Plant {
         self.h20Frequency = h20Frequencey
         self.avatarUrl = avatarUrl
         self.happiness = happiness
-        self.lastWateredAt = lastWateredAt
     }
     
     // This will convert a PlantRepresentation into a Plant object for saving on Coredata
@@ -45,7 +47,6 @@ extension Plant {
             h20Frequencey: Int16(plantRepresentation.h20Frequencey ?? 0),
             avatarUrl: plantRepresentation.avatarUrl ?? "",
             happiness: plantRepresentation.happiness ?? false,
-            lastWateredAt: plantRepresentation.lastWateredAt ?? Date(),
             context: context)
     }
 }

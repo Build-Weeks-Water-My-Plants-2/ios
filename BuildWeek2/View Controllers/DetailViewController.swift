@@ -29,7 +29,7 @@ class DetailViewController: UIViewController {
         let species = plantSpeciesTextField.text
             else { return }
         let h20Frequency = Int16(waterFrequencyTextField.text ?? "0") ?? 0
-        
+       
         CoreDataStack.shared.mainContext.perform {
             if let plant = self.plantCell{
                 plant.nickname = nickname
@@ -41,8 +41,8 @@ class DetailViewController: UIViewController {
                                  species: species,
                                  h20Frequencey: h20Frequency,
                                  avatarUrl: "",
-                                 happiness: false,
-                                 lastWateredAt: Date())
+                                 happiness: false
+                                 )
                 self.apiController.addPlantToDatabase(plant: newPlant)
             }
         }
