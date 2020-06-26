@@ -46,7 +46,7 @@ class APIController {
     
     // MARK: - Methods
     
-    func signUp(with user: UserRepresentation, completion: @escaping NetworkCompletionHandler) {
+    func signUp(with user: UserRepresentation, completion: @escaping (Bearer?) -> Void) {
         
         /// Request URL
         var request = URLRequest(url: signUpURL)
@@ -63,21 +63,21 @@ class APIController {
             /// URL Data Task
             URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
                 guard let self = self else {
-                    completion(.failure(.otherError))
+                    completion(nil)
                     return
                 }
                 
                 // Error Check
                 if let error = error {
                     print("Sign Up failed with error: \(error)")
-                    completion(.failure(.failedSignUp))
+                    completion(nil)
                     return
                 }
 
                 // Check for Data
                 guard let data = data else {
                     print("Data was not recieved")
-                    completion(.failure(.failedSignIn))
+                    completion(nil)
                     return
                 }
                 
@@ -89,19 +89,19 @@ class APIController {
                 do {
                     let decoder = JSONDecoder()
                     self.bearer = try decoder.decode(Bearer.self, from: data)
-                    completion(.success(true))
+                    completion(nil)
                 } catch {
                     print("Error decoding bearer: \(error)")
-                    completion(.failure(.noToken))
+                    completion(nil)
                     return
                 }
                 
-                completion(.success(true))
+                completion(self.bearer)
             }.resume()
             
         } catch {
             print("Error signing up user: \(error)")
-            completion(.failure(.failedSignUp))
+            completion(nil)
         }
     }
     
