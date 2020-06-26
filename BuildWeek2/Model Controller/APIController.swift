@@ -39,7 +39,7 @@ class APIController {
     typealias NetworkCompletionHandler = (Result<Bool, NetworkError>) -> Void
     
     // MARK: - Initializer
-
+    
     private init() {
         
     }
@@ -73,7 +73,7 @@ class APIController {
                     completion(nil)
                     return
                 }
-
+                
                 // Check for Data
                 guard let data = data else {
                     print("Data was not recieved")
@@ -106,6 +106,47 @@ class APIController {
     }
     
     func signIn(with user: UserRepresentation, completion: @escaping NetworkCompletionHandler) {
+        // Creating URL Request
+        var request = URLRequest(url: signInURL)
+        request.httpMethod = HTTPMethod.post.rawValue
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        do{
+            let encoder = JSONEncoder()
+            let jsonData = try encoder.encode(user)
+            request.httpBody = jsonData
+            
+            URLSession.shared.dataTask(with: request) { (data, response, error) in
+                if let error = error {
+                    print("Sign in failed with error: \(error)")
+                    completion(.failure(.failedSignIn))
+                    return
+                }
+                
+                if let response = response {
+                    print(response)
+                }
+                
+                guard let data = data else{
+                    print("Data was not recieved")
+                    completion(.failure(.failedSignIn))
+                    return
+                }
+                
+                do{
+                    let decoder = JSONDecoder()
+                    self.bearer = try decoder.decode(Bearer.self, from: data)
+                    completion(.success(true))
+                } catch {
+                    print("Error Decoding bearer: \(error)")
+                    completion(.failure(.noToken))
+                    return
+                }
+            }
+        } catch {
+            print("Error encoding user: \(error)")
+            completion(.failure(.failedSignIn))
+        }
         
     }
     
@@ -212,7 +253,7 @@ class APIController {
         // Creating a new CoreData context so that we aren't saving to the main context while calling this inside of a URLSession.
         let context = CoreDataStack.shared.container.newBackgroundContext()
         // Creating an array of UUIDs
-        let idsToFetch = representations.compactMap { Int16($0.id) }
+        let idsToFetch = representations.compactMap { Int16($0.id!) }
         let representationByID = Dictionary(uniqueKeysWithValues: zip(idsToFetch, representations))
         //Mutable copy of our dictonary to use for new Objects on the remote that we don't have locally
         var plantsToCreate = representationByID

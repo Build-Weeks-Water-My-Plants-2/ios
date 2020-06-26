@@ -1,7 +1,7 @@
 import Foundation
 
 struct PlantRepresentation: Equatable, Codable {
-    var id: Int
+    var id: Int?
     var nickname: String
     var species: String?
     var h20Frequencey: Int?

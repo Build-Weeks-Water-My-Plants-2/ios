@@ -20,21 +20,18 @@ extension Plant {
     
     // MARK: - Convenience Initalizers
     // Plant data object Initalizer
-    @discardableResult convenience init(id: Int16,
-                                        nickname: String,
-                                        species: String,
-                                        h20Frequencey: Int16,
-                                        userId: Int16,
-                                        avatarUrl: String,
-                                        happiness: Bool,
-                                        lastWateredAt: Date,
-                                        context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
+    @discardableResult convenience init(
+        nickname: String,
+        species: String,
+        h20Frequencey: Int16,
+        avatarUrl: String,
+        happiness: Bool,
+        lastWateredAt: Date = Date(),
+        context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
         self.init(context: context)
-        self.id = id
         self.nickname = nickname
         self.species = species
         self.h20Frequency = h20Frequencey
-        self.userId = userId
         self.avatarUrl = avatarUrl
         self.happiness = happiness
         self.lastWateredAt = lastWateredAt
@@ -42,14 +39,13 @@ extension Plant {
     
     // This will convert a PlantRepresentation into a Plant object for saving on Coredata
     @discardableResult convenience init?(plantRepresentation: PlantRepresentation, context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
-        self.init(id: Int16(plantRepresentation.id),
-                  nickname: plantRepresentation.nickname,
-                  species: plantRepresentation.species ?? "",
-                  h20Frequencey: Int16(plantRepresentation.h20Frequencey ?? 0),
-                  userId: Int16(plantRepresentation.userId ?? 0),
-                  avatarUrl: plantRepresentation.avatarUrl ?? "",
-                  happiness: plantRepresentation.happiness ?? false,
-                  lastWateredAt: plantRepresentation.lastWateredAt ?? Date(),
-                  context: context)
+        self.init(
+            nickname: plantRepresentation.nickname,
+            species: plantRepresentation.species ?? "",
+            h20Frequencey: Int16(plantRepresentation.h20Frequencey ?? 0),
+            avatarUrl: plantRepresentation.avatarUrl ?? "",
+            happiness: plantRepresentation.happiness ?? false,
+            lastWateredAt: plantRepresentation.lastWateredAt ?? Date(),
+            context: context)
     }
 }
