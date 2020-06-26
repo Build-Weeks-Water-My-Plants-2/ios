@@ -154,7 +154,7 @@ class APIController {
     
     // Adding plants to our database / Possibly also called when updating the plant in the database
     func addPlantToDatabase(plant: Plant, completion: @escaping NetworkCompletionHandler = { _ in }) {
-        let requestURL = baseURL.appendingPathComponent(String(plant.id)).appendingPathExtension("json")
+        let requestURL = baseURL.appendingPathComponent("/plants")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "POST"
         
