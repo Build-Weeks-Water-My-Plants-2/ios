@@ -179,14 +179,14 @@
             <objects>
                 <viewController id="dPL-su-52T" customClass="LoginViewController" customModule="BuildWeek2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="f83-Lk-RDX">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cactusPlant" translatesAutoresizingMaskIntoConstraints="NO" id="haX-Da-VFP">
-                                <rect key="frame" x="0.0" y="196" width="414" height="648"/>
+                                <rect key="frame" x="0.0" y="196" width="414" height="702"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="J48-LF-TKw">
-                                <rect key="frame" x="20" y="40" width="374" height="315"/>
+                                <rect key="frame" x="20" y="84" width="374" height="315"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Plant Parenthood" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="lJQ-h2-e2e">
                                         <rect key="frame" x="20" y="0.0" width="334" height="53"/>
@@ -388,7 +388,7 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
-                        <segue destination="dPL-su-52T" kind="presentation" identifier="SignInSegue" id="vTo-r0-aoE"/>
+                        <segue destination="dPL-su-52T" kind="presentation" identifier="SignInSegue" modalPresentationStyle="fullScreen" id="vTo-r0-aoE"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="izP-Jr-DSD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

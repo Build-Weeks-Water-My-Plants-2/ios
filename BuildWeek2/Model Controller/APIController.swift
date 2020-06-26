@@ -39,6 +39,10 @@ class APIController {
     typealias NetworkCompletionHandler = (Result<Bool, NetworkError>) -> Void
     
     // MARK: - Initializer
+//
+//    init(){
+//        self.fetchPlantsFromDatabase()
+//    }
     
     init() {
         self.fetchPlantsFromDatabase()
