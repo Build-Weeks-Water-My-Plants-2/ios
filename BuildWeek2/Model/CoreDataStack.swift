@@ -10,7 +10,7 @@ class CoreDataStack {
     
     /// Persistent Store & Persistent Store Coordinator
     lazy var container: NSPersistentContainer = {
-        let newContainer = NSPersistentContainer(name: "BuildWeek2")
+        let newContainer = NSPersistentContainer(name: "UserData")
         newContainer.loadPersistentStores { _, error in
             if let error = error {
                 fatalError("Failed to load persistent stores: \(error)")
