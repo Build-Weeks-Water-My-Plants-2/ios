@@ -47,7 +47,7 @@ class PlantTableViewController: UITableViewController {
     
     @IBAction func refreshButtonTapped(_ sender: Any) {
         apiController.fetchPlantsFromDatabase()
-        tableView.reloadData()
+        self.tableView.reloadData()
     }
     
     

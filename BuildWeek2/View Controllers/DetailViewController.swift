@@ -29,13 +29,17 @@ class DetailViewController: UIViewController {
         let species = plantSpeciesTextField.text
             else { return }
         let h20Frequency = Int16(waterFrequencyTextField.text ?? "0") ?? 0
-       
-        CoreDataStack.shared.mainContext.perform {
+        
             if let plant = self.plantCell{
                 plant.nickname = nickname
                 plant.species = species
                 plant.h20Frequency = h20Frequency
                 self.apiController.addPlantToDatabase(plant: plant)
+                do{
+                    try CoreDataStack.shared.mainContext.save()
+                } catch {
+                    print("Error saving managed object context: \(error)")
+                }
             } else {
                let newPlant = Plant(nickname: nickname,
                                  species: species,
@@ -44,8 +48,13 @@ class DetailViewController: UIViewController {
                                  happiness: false
                                  )
                 self.apiController.addPlantToDatabase(plant: newPlant)
+                do{
+                    try CoreDataStack.shared.mainContext.save()
+                } catch {
+                    print("Error saving managed object context: \(error)")
+                }
             }
-        }
+        
         navigationController?.popViewController(animated: true)
     }
     
