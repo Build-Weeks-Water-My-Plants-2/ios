@@ -104,11 +104,11 @@
 			children = (
 				0BFF13C3249C6F9700C8537A /* UserData.xcdatamodeld */,
 				0BFF13C6249C72BB00C8537A /* CoreDataStack.swift */,
+				0B4D599124A2E5F1006A1379 /* UserRepresentation.swift */,
 				0BD03E17249D890E001A90C1 /* User+Convenience.swift */,
 				0BFF13CA249C75B700C8537A /* Plant+Convenience.swift */,
 				0BFF13CE249C789200C8537A /* PlantRepresentation.swift */,
 				0B4D598C24A2AE8A006A1379 /* Bearer.swift */,
-				0B4D599124A2E5F1006A1379 /* UserRepresentation.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -161,6 +161,7 @@
 				0BC01160249B010C00DB92FB /* Sources */,
 				0BC01161249B010C00DB92FB /* Frameworks */,
 				0BC01162249B010C00DB92FB /* Resources */,
+				C2526B3E24A517EE008F8BF3 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -216,6 +217,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C2526B3E24A517EE008F8BF3 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0BC01160249B010C00DB92FB /* Sources */ = {
