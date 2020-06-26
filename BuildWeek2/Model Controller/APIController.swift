@@ -41,6 +41,7 @@ class APIController {
     // MARK: - Initializer
 
     private init() {
+        
     }
     
     // MARK: - Methods
@@ -114,6 +115,12 @@ class APIController {
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
+        guard let bearer = bearer else {
+            print("No bearer token")
+            return
+        }
+        request.setValue("Basic \(bearer.token)", forHTTPHeaderField: "Authorization")
+        
         do {
             guard let representation = plant.plantRepresentation else {
                 completion(.failure(.noRep))
@@ -173,6 +180,11 @@ class APIController {
         let requestURL = baseURL.appendingPathComponent(String(plant.id)).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "DELETE"
+        guard let bearer = bearer else {
+            print("No bearer token")
+            return
+        }
+        request.setValue("Basic \(bearer.token)", forHTTPHeaderField: "Authorization")
         
         URLSession.shared.dataTask(with: request) { _, _, _ in
             DispatchQueue.main.async {

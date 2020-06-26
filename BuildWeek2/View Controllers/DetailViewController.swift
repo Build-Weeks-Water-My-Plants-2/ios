@@ -1,49 +1,39 @@
-//
-//  DetailViewController.swift
-//  BuildWeek2
-//
-//  Created by Clean Mac on 6/22/20.
-//  Copyright © 2020 Clayton Watkins. All rights reserved.
-//
-
 import UIKit
-
-
-
 
 class DetailViewController: UIViewController {
     
-    var apiController: APIController?
-      var plantCell: Plant?
+    // MARK: - Properties
     
-    @IBOutlet weak var plantImageView: UIImageView!
-    @IBOutlet weak var nicknameTextField: UITextField!
-    @IBOutlet weak var plantSpeciesTextField: UITextField!
-    @IBOutlet weak var waterFrequencyTextField: UITextField!
-    @IBOutlet weak var happinessSegmentedControl: UISegmentedControl!
-    @IBOutlet weak var savePlantButton: UIButton!
+    var apiController = APIController.shared
+    var plantCell: Plant?
     
-  
+    // MARK: - IBOutlets
+    
+    @IBOutlet private weak var plantImageView: UIImageView!
+    @IBOutlet private weak var nicknameTextField: UITextField!
+    @IBOutlet private weak var plantSpeciesTextField: UITextField!
+    @IBOutlet private weak var waterFrequencyTextField: UITextField!
+    @IBOutlet private weak var happinessSegmentedControl: UISegmentedControl!
+    @IBOutlet private weak var savePlantButton: UIButton!
+    
+    // MARK: - App Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         getDetails()
-        
-        
-        // Do any additional setup after loading the view.
     }
     
+    // MARK: - Methods
+    
     func getDetails() {
-        guard let apiController = apiController,
-            let plantCell = self.plantCell else { return }
-        apiController.fetchPlantsFromDatabase() { (data) in
+        guard let plantCell = self.plantCell else { return }
+        apiController.fetchPlantsFromDatabase { data in
             if (try? data.get()) != nil {
                 DispatchQueue.main.async {
                     self.updateViews(with: plantCell)
                 }
             }
         }
-        
     }
     
     private func updateViews(with plant: Plant) {
@@ -51,19 +41,8 @@ class DetailViewController: UIViewController {
         plantSpeciesTextField.text = plant.species
         waterFrequencyTextField.text = ""
         happinessSegmentedControl.selectedSegmentIndex = 0
-        
-        
-        
     }
     
     @IBAction func buttonTapped(_ sender: UIButton) {
     }
-
 }
-
-
-
-
-
-
-

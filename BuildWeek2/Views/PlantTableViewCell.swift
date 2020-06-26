@@ -12,8 +12,8 @@ class PlantTableViewCell: UITableViewCell {
     
     // MARK: - IBOutlets
     
-    @IBOutlet weak var plantImageView: UIImageView!
-    @IBOutlet weak var plantLabel: UILabel!
+    @IBOutlet private weak var plantImageView: UIImageView!
+    @IBOutlet private weak var plantLabel: UILabel!
     
     // MARK: - Properties
 

@@ -67,7 +67,9 @@ class PlantTableViewController: UITableViewController {
         if editingStyle == .delete {
             let plant = fetchedResultsController.object(at: indexPath)
             apiController.deletePlantsFromDatabase(plant) { result in
+                
                 guard let _ = try? result.get() else { return }
+                
                 DispatchQueue.main.async {
                     let moc = CoreDataStack.shared.mainContext
                     moc.delete(plant)
@@ -84,25 +86,18 @@ class PlantTableViewController: UITableViewController {
     }
     
     // MARK: - Navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "AddPlantSegue"{
-            if let addVC = segue.destination as? DetailViewController {
-                //addVC.apiController = apiController
-            }
-        } else if segue.identifier == "ShowDetailSegue"{
+        if segue.identifier == "ShowDetailSegue"{
             if let detailVC = segue.destination as? DetailViewController,
                 let indexPath = tableView.indexPathForSelectedRow {
-                //                detailVC.plant = fetchedResultsController.object(at: indexPath)
-                //                detailVC.apiController = apiController
-            }
-        } else if segue.identifier == "ShowProfileSegue"{
-            if let profileVC = segue.destination as? ProfileViewController {
-                //profileVC.apiController = apiController
+                detailVC.plantCell = fetchedResultsController.object(at: indexPath)
             }
         }
     }
-    
 }
+
+// MARK: - Extensions
 
 extension PlantTableViewController: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
