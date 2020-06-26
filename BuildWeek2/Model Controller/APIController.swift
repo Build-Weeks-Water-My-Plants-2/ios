@@ -45,7 +45,8 @@ class APIController {
 //    }
     
     init() {
-        self.fetchPlantsFromDatabase()
+        #warning("Bad implementation")
+//        self.fetchPlantsFromDatabase()
     }
     
     // MARK: - Methods
@@ -161,7 +162,7 @@ class APIController {
             }
             
             do {
-                let plantRepresentation = Array(try JSONDecoder().decode([Int : PlantRepresentation].self, from: data).values)
+                let plantRepresentation = Array(try JSONDecoder().decode([Int: PlantRepresentation].self, from: data).values)
                 try self.updatePlants(with: plantRepresentation)
                 DispatchQueue.main.async {
                     completion(.success(true))
@@ -205,16 +206,16 @@ class APIController {
         // Creating a new CoreData context so that we aren't saving to the main context while calling this inside of a URLSession.
         let context = CoreDataStack.shared.container.newBackgroundContext()
         // Creating an array of UUIDs
-        let idsToFetch = representations.compactMap{ Int16($0.id) }
+        let idsToFetch = representations.compactMap { Int16($0.id) }
         let representationByID = Dictionary(uniqueKeysWithValues: zip(idsToFetch, representations))
         //Mutable copy of our dictonary to use for new Objects on the remote that we don't have locally
         var plantsToCreate = representationByID
         let fetchRequest: NSFetchRequest<Plant> = Plant.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id IN %@", idsToFetch)
         context.performAndWait {
-            do{
+            do {
                 let existingPlants = try context.fetch(fetchRequest)
-                for plant in existingPlants{
+                for plant in existingPlants {
                     let id = plant.id
                     guard let representation = representationByID[id] else { continue }
                     self.update(plant: plant, with: representation)

@@ -18,7 +18,8 @@ class PlantTableViewController: UITableViewController {
                                              sectionNameKeyPath: nil,
                                              cacheName: nil)
         frc.delegate = self
-        try! frc.performFetch()
+        #warning("Commented out perform fetch to avoid errors")
+//        try! frc.performFetch()
         return frc
     }()
     
