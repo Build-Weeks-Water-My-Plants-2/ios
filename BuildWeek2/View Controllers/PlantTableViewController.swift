@@ -4,7 +4,8 @@ import CoreData
 class PlantTableViewController: UITableViewController {
     
     // MARK: - Properties
-    let apiController = APIController()
+    
+    let apiController = APIController.shared
     
     // Fetching Core Data Properties
     lazy var fetchedResultsController: NSFetchedResultsController<Plant> = {
@@ -17,13 +18,20 @@ class PlantTableViewController: UITableViewController {
                                              managedObjectContext: context,
                                              sectionNameKeyPath: nil,
                                              cacheName: nil)
+        
         frc.delegate = self
-        #warning("Commented out perform fetch to avoid errors")
-//        try! frc.performFetch()
+        
+        do {
+            try frc.performFetch()
+        } catch {
+            print("\(error)")
+        }
+        
         return frc
     }()
     
-    // MARK: - LifeCycle
+    // MARK: - App LifeCycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -36,6 +44,7 @@ class PlantTableViewController: UITableViewController {
     }
     
     // MARK: - IBActions
+    
     @IBAction func refreshButtonTapped(_ sender: Any) {
         apiController.fetchPlantsFromDatabase()
         tableView.reloadData()
@@ -44,13 +53,12 @@ class PlantTableViewController: UITableViewController {
     
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return fetchedResultsController.sections?[section].numberOfObjects ?? 0
+        fetchedResultsController.sections?[section].numberOfObjects ?? 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "PlantCell", for: indexPath) as? PlantTableViewCell else { return UITableViewCell() }
         cell.plant = fetchedResultsController.object(at: indexPath)
-        cell.apiController = apiController
         return cell
     }
     
@@ -58,12 +66,12 @@ class PlantTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let plant = fetchedResultsController.object(at: indexPath)
-            apiController.deletePlantsFromDatabase(plant) { (result) in
+            apiController.deletePlantsFromDatabase(plant) { result in
                 guard let _ = try? result.get() else { return }
                 DispatchQueue.main.async {
                     let moc = CoreDataStack.shared.mainContext
                     moc.delete(plant)
-                    do{
+                    do {
                         try moc.save()
                         tableView.reloadData()
                     } catch {
@@ -78,17 +86,17 @@ class PlantTableViewController: UITableViewController {
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "AddPlantSegue"{
-            if let addVC = segue.destination as? DetailViewController{
+            if let addVC = segue.destination as? DetailViewController {
                 //addVC.apiController = apiController
             }
         } else if segue.identifier == "ShowDetailSegue"{
             if let detailVC = segue.destination as? DetailViewController,
-                let indexPath = tableView.indexPathForSelectedRow{
-//                detailVC.plant = fetchedResultsController.object(at: indexPath)
-//                detailVC.apiController = apiController
+                let indexPath = tableView.indexPathForSelectedRow {
+                //                detailVC.plant = fetchedResultsController.object(at: indexPath)
+                //                detailVC.apiController = apiController
             }
         } else if segue.identifier == "ShowProfileSegue"{
-            if let profileVC = segue.destination as? ProfileViewController{
+            if let profileVC = segue.destination as? ProfileViewController {
                 //profileVC.apiController = apiController
             }
         }
@@ -96,7 +104,7 @@ class PlantTableViewController: UITableViewController {
     
 }
 
-extension PlantTableViewController: NSFetchedResultsControllerDelegate{
+extension PlantTableViewController: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()
     }
