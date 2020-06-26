@@ -20,29 +20,30 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getDetails()
+        updateViews()
     }
     
-    // MARK: - Methods
-    
-    func getDetails() {
-        guard let plantCell = self.plantCell else { return }
-        apiController.fetchPlantsFromDatabase { data in
-            if (try? data.get()) != nil {
-                DispatchQueue.main.async {
-                    self.updateViews(with: plantCell)
-                }
-            }
+    // MARK: - IBAction
+    @IBAction func buttonTapped(_ sender: UIButton) {
+        guard let nickname = nicknameTextField.text, !nickname.isEmpty,
+            let plant = plantCell
+            else { return }
+        plant.nickname = nickname
+        plant.species = plantSpeciesTextField.text
+        plant.h20Frequency = Int16(waterFrequencyTextField.text ?? "0") ?? 0
+        apiController.addPlantToDatabase(plant: plant)
+        do{
+            try CoreDataStack.shared.mainContext.save()
+        } catch {
+            print("Error saving managed object context: \(error)")
         }
     }
     
-    private func updateViews(with plant: Plant) {
-        nicknameTextField.text = plant.nickname
-        plantSpeciesTextField.text = plant.species
-        waterFrequencyTextField.text = ""
-        happinessSegmentedControl.selectedSegmentIndex = 0
-    }
+    // MARK: - Private Functions
     
-    @IBAction func buttonTapped(_ sender: UIButton) {
+    private func updateViews() {
+        nicknameTextField.text = plantCell?.nickname
+        plantSpeciesTextField.text = plantCell?.species
+        waterFrequencyTextField.text = String(plantCell?.h20Frequency ?? 0) 
     }
 }
