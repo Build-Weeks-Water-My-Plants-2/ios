@@ -1,48 +1,59 @@
-//
-//  User+Convienece.swift
-//  BuildWeek2
-//
-//  Created by Clayton Watkins on 6/18/20.
-//  Copyright © 2020 Clayton Watkins. All rights reserved.
-//
-
 import Foundation
 import CoreData
 
 extension User {
-    //MARK: - Properties
+    
+    // MARK: - Properties
+    
+    /// Object passed to Backend
     var userRepresentation: UserRepresentation? {
         guard let username = username,
             let password = password,
-            let phoneNumber = phoneNumber,
-            let avatarUrl = avatarUrl
-            else { return nil }
-        return UserRepresentation(id: Int(id), username: username, password: password, phoneNumber: phoneNumber, avatarUrl: avatarUrl)
+            let bearer = bearer
+            else {
+                print("Error creating UserRepresentation for backend.")
+                return nil
+        }
+        
+        return UserRepresentation(id: Int(id),
+                                  username: username,
+                                  password: password,
+                                  phoneNumber: phoneNumber,
+                                  avatarUrl: avatarUrl,
+                                  bearer: bearer)
     }
     
-    // MARK: - Convenience Initalizers
-    // User data object Initializer
+    // MARK: - Initalizers
+    
+    /// Creates User with the same Managed Object Context "moc" -> Local -> CoreData
     @discardableResult convenience init(id: Int16,
                                         username: String,
                                         password: String,
                                         phoneNumber: String,
                                         avatarUrl: String,
-                                        context: NSManagedObjectContext = CoreDataStack.shared.mainContext){
+                                        bearer: String,
+                                        context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
+        
         self.init(context: context)
         self.id = id
         self.username = username
         self.password = password
         self.phoneNumber = phoneNumber
         self.avatarUrl = avatarUrl
+        self.bearer = bearer
     }
     
-    @discardableResult convenience init?(userRepresentation: UserRepresentation, context: NSManagedObjectContext = CoreDataStack.shared.mainContext){
+    /// Creates User from UserRepresentation Data (Backend Data) -> CoreData
+    @discardableResult
+    convenience init?(userRepresentation: UserRepresentation,
+                      context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
+        
         self.init(id: Int16(userRepresentation.id ?? 1),
                   username: userRepresentation.username,
                   password: userRepresentation.password,
                   phoneNumber: userRepresentation.phoneNumber ?? "",
                   avatarUrl: userRepresentation.avatarUrl ?? "",
+                  bearer: userRepresentation.bearer ?? "",
                   context: context)
     }
-    
 }

@@ -1,43 +1,48 @@
-//
-//  CoreDataStack.swift
-//  BuildWeek2
-//
-//  Created by Clayton Watkins on 6/18/20.
-//  Copyright © 2020 Clayton Watkins. All rights reserved.
-//
-
 import Foundation
 import CoreData
 
-import CoreData
-
 class CoreDataStack {
+    
+    // MARK: - Properties
+    
+    /// Shared instance of CoreDataStack
     static let shared = CoreDataStack()
     
+    /// Persistent Store & Persistent Store Coordinator
     lazy var container: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "UserData")
-        container.loadPersistentStores { (_, error) in
-            if let error = error{
-                fatalError("Failed to load persistence stores: \(error)")
+        let newContainer = NSPersistentContainer(name: "UserData")
+        newContainer.loadPersistentStores { _, error in
+            if let error = error {
+                fatalError("Failed to load persistent stores: \(error)")
             }
         }
-        container.viewContext.automaticallyMergesChangesFromParent = true
-        return container
+        newContainer.viewContext.automaticallyMergesChangesFromParent = true
+        return newContainer
     }()
     
+    /// Managed Object Context
+    // Retrive with "CoreDataStack.shared.mainContext"
     var mainContext: NSManagedObjectContext {
-        return container.viewContext
+        container.viewContext
     }
     
+    // MARK: - Initializers
+    
+    private init() {}
+    
+    // MARK: - Functions
+    
     func save(context: NSManagedObjectContext = CoreDataStack.shared.mainContext) throws {
-        var error: Error?
+        var saveError: Error?
+        
         context.performAndWait {
-            do{
+            do {
                 try context.save()
-            } catch let saveError {
-                error = saveError
+            } catch {
+                saveError = error
             }
         }
-        if let error = error { throw error }
+        
+        if let saveError = saveError { throw saveError }
     }
 }

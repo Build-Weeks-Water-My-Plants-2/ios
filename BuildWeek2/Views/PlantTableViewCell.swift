@@ -9,15 +9,25 @@
 import UIKit
 
 class PlantTableViewCell: UITableViewCell {
+    
+    // MARK: - IBOutlets
+    
+    @IBOutlet private weak var plantImageView: UIImageView!
+    @IBOutlet private weak var plantLabel: UILabel!
+    
+    // MARK: - Properties
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
+    var plant: Plant? {
+        didSet {
+            updateViews()
+        }
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
+    
+    // MARK: - Private Function
+    
+    private func updateViews() {
+        guard let plant = plant else { return }
+        plantLabel.text = plant.nickname
+        plantImageView.image = UIImage(contentsOfFile: "")
     }
-
 }
