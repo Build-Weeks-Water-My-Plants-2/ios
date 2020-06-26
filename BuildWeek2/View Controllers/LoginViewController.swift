@@ -55,7 +55,14 @@ class LoginViewController: UIViewController {
                     return
                 }
             }
-            #warning("Make dat Alert")
+            let alertController = UIAlertController(title: "Sign Up Successful", message: "Now please log in", preferredStyle: .alert)
+            let alertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+            alertController.addAction(alertAction)
+            self.present(alertController, animated: true) {
+                self.loginType = .signIn
+                self.loginSegementedController.selectedSegmentIndex = 1
+                self.signInButton.setTitle("Sign In", for: .normal)
+            }
         } else {
             apiController.signIn(with: newUser) { result in
                 do {

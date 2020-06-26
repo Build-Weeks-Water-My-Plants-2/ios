@@ -198,14 +198,25 @@ class APIController {
     }
     
     // Fetching plants from database
-    func fetchPlantsFromDatabase(completion: @escaping NetworkCompletionHandler = { _ in }) {
-        let requestURL = baseURL.appendingPathExtension("json")
+    func fetchPlantsFromDatabase(completion: @escaping (Result<[PlantRepresentation] , NetworkError>) -> Void = { _ in }) {
+        let requestURL = baseURL.appendingPathComponent("/plants")
+        var request = URLRequest(url: requestURL)
+        request.httpMethod = "GET"
+        guard let bearer = bearer else {
+            print("No bearer token")
+            return
+        }
+        request.setValue("Basic \(bearer.token)", forHTTPHeaderField: "Authorization")
         
-        URLSession.shared.dataTask(with: requestURL) { data, _, error in
+        URLSession.shared.dataTask(with: requestURL) { data, response, error in
             if let error = error {
                 print("Error fetching plant(s): \(error)")
                 completion(.failure(.otherError))
                 return
+            }
+            
+            if let response = response {
+                print(response)
             }
             
             guard let data = data else {
@@ -215,11 +226,16 @@ class APIController {
             }
             
             do {
-                let plantRepresentation = Array(try JSONDecoder().decode([Int: PlantRepresentation].self, from: data).values)
-                try self.updatePlants(with: plantRepresentation)
-                DispatchQueue.main.async {
-                    completion(.success(true))
-                }
+//                let decoder = JSONDecoder()
+//                let plantRepresentation = Array(try decoder.decode([Int: PlantRepresentation].self, from: data).values)
+//                try self.updatePlants(with: plantRepresentation)
+//                DispatchQueue.main.async {
+//                    completion(.success(true))
+//                }
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let plantRepresentation = try decoder.decode([PlantRepresentation].self, from: data)
+                completion(.success(plantRepresentation))
             } catch {
                 print("Error decoding plant representation: \(error)")
                 completion(.failure(.noDecode))
