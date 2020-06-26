@@ -5,7 +5,7 @@ extension User {
     
     // MARK: - Properties
     
-    /// Objects passed to Backend
+    /// Object passed to Backend
     var userRepresentation: UserRepresentation? {
         guard let username = username,
             let password = password,
@@ -25,7 +25,7 @@ extension User {
     
     // MARK: - Initalizers
     
-    /// Creates User with the same Managed Object Context "moc"
+    /// Creates User with the same Managed Object Context "moc" -> Local -> CoreData
     @discardableResult convenience init(id: Int16,
                                         username: String,
                                         password: String,
@@ -43,7 +43,7 @@ extension User {
         self.bearer = bearer
     }
     
-    /// Creates User from UserRepresentation Data (Bakend Data)
+    /// Creates User from UserRepresentation Data (Backend Data) -> CoreData
     @discardableResult
     convenience init?(userRepresentation: UserRepresentation,
                       context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {

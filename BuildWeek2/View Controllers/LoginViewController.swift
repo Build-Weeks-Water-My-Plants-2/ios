@@ -14,6 +14,8 @@ class LoginViewController: UIViewController {
     let apiController = APIController.shared
     var loginType = LoginType.signUp
     
+    var user: User?
+    
     // MARK: - IBOutlets
 
     @IBOutlet private weak var usernameTextField: UITextField!
@@ -36,7 +38,7 @@ class LoginViewController: UIViewController {
                 return
         }
         
-        let tempUserRepresentation = UserRepresentation(id: nil, username: inputedUsername, password: inputedPassword, phoneNumber: nil, avatarUrl: nil)
+        let _ = UserRepresentation(id: nil, username: inputedUsername, password: inputedPassword, phoneNumber: nil, avatarUrl: nil)
         
         
     }

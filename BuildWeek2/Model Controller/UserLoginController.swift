@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum LoginError: Error{
+enum LoginError: Error {
     case noData
     case noToken
     case failedSignUp
@@ -18,12 +18,12 @@ enum LoginError: Error{
 }
 
 class UserLoginController {
+    
     // MARK: - Properties
+    
     var bearer: Bearer?
     private let baseURL = URL(string: "http://plant-app-pt13.herokuapp.com/")!
     private lazy var signUpURL = baseURL.appendingPathComponent("/auth/register")
     private lazy var signInURL = baseURL.appendingPathComponent("/auth/login")
-    
-    
-    
+
 }

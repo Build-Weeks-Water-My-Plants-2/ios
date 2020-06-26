@@ -1,5 +1,5 @@
 import Foundation
 
-struct Bearer: Codable{
+struct Bearer: Codable {
     let token: String
 }
