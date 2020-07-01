@@ -83,9 +83,9 @@
 			children = (
 				C218C686249C577C000475F4 /* Resources */,
 				0BFF13C1249C5D7300C8537A /* Storyboards */,
-				C218C687249C585D000475F4 /* View Controllers */,
-				C24EE99524A2FC05001921A2 /* Views */,
 				0BFF13C2249C6F1F00C8537A /* Model */,
+				C24EE99524A2FC05001921A2 /* Views */,
+				C218C687249C585D000475F4 /* View Controllers */,
 				ABFB34B2249C5E6800A7AE15 /* Model Controller */,
 			);
 			path = BuildWeek2;

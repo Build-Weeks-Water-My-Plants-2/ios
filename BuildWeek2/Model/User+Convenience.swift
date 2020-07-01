@@ -3,36 +3,17 @@ import CoreData
 
 extension User {
     
-    // MARK: - Properties
-    
-    /// Object passed to Backend
-    var userRepresentation: UserRepresentation? {
-        guard let username = username,
-            let password = password,
-            let bearer = bearer
-            else {
-                print("Error creating UserRepresentation for backend.")
-                return nil
-        }
-        
-        return UserRepresentation(id: Int(id),
-                                  username: username,
-                                  password: password,
-                                  phoneNumber: phoneNumber,
-                                  avatarUrl: avatarUrl,
-                                  bearer: bearer)
-    }
-    
     // MARK: - Initalizers
     
-    /// Creates User with the same Managed Object Context "moc" -> Local -> CoreData
-    @discardableResult convenience init(id: Int16,
-                                        username: String,
-                                        password: String,
-                                        phoneNumber: String,
-                                        avatarUrl: String,
-                                        bearer: String,
-                                        context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
+    /// Creates User with shared Managed Object Contect "moc"
+    @discardableResult
+    convenience init(id: String,
+                     username: String,
+                     password: String,
+                     phoneNumber: String?,
+                     avatarUrl: String?,
+                     bearer: String,
+                     context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
         
         self.init(context: context)
         self.id = id
@@ -43,17 +24,49 @@ extension User {
         self.bearer = bearer
     }
     
-    /// Creates User from UserRepresentation Data (Backend Data) -> CoreData
+    /// Creates User from UserRepresentation Data
     @discardableResult
     convenience init?(userRepresentation: UserRepresentation,
                       context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
         
-        self.init(id: Int16(userRepresentation.id ?? 1),
+        guard let userId = userRepresentation.id,
+            let userBearer = userRepresentation.bearer else {
+                print("Error: Missing ")
+                return nil
+        }
+        
+        self.init(id: String(userId),
                   username: userRepresentation.username,
                   password: userRepresentation.password,
-                  phoneNumber: userRepresentation.phoneNumber ?? "",
-                  avatarUrl: userRepresentation.avatarUrl ?? "",
-                  bearer: userRepresentation.bearer ?? "",
+                  phoneNumber: userRepresentation.phoneNumber,
+                  avatarUrl: userRepresentation.avatarUrl,
+                  bearer: userBearer,
                   context: context)
+    }
+    
+    // MARK: - Objects
+    
+    /// Object passed to Backend
+    var userRepresentation: UserRepresentation? {
+        guard let username = username,
+            let password = password
+            else {
+                print("Error. Missing one (or both) of the following in the stored user: username/password")
+                return nil
+        }
+        
+        let idNumber: Int?
+        if let id = id {
+            idNumber = Int(id)
+        } else {
+            idNumber = nil
+        }
+        
+        return UserRepresentation(id: idNumber,
+                                  username: username,
+                                  password: password,
+                                  phoneNumber: phoneNumber,
+                                  avatarUrl: avatarUrl,
+                                  bearer: bearer)
     }
 }

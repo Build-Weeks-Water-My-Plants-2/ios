@@ -5,10 +5,8 @@ class CoreDataStack {
     
     // MARK: - Properties
     
-    /// Shared instance of CoreDataStack
     static let shared = CoreDataStack()
     
-    /// Persistent Store & Persistent Store Coordinator
     lazy var container: NSPersistentContainer = {
         let newContainer = NSPersistentContainer(name: "UserData")
         newContainer.loadPersistentStores { _, error in
@@ -19,9 +17,7 @@ class CoreDataStack {
         newContainer.viewContext.automaticallyMergesChangesFromParent = true
         return newContainer
     }()
-    
-    /// Managed Object Context
-    // Retrive with "CoreDataStack.shared.mainContext"
+
     var mainContext: NSManagedObjectContext {
         container.viewContext
     }
@@ -30,19 +26,23 @@ class CoreDataStack {
     
     private init() {}
     
-    // MARK: - Functions
+    // MARK: - Methods
     
     func save(context: NSManagedObjectContext = CoreDataStack.shared.mainContext) throws {
-        var saveError: Error?
+        var thorwingError: Error?
         
-        context.performAndWait {
-            do {
-                try context.save()
-            } catch {
-                saveError = error
+        if context.hasChanges {
+            context.performAndWait {
+                do {
+                    try context.save()
+                } catch {
+                    thorwingError = error
+                }
             }
+        } else {
+            print("No changes in moc to save.")
         }
         
-        if let saveError = saveError { throw saveError }
+        if let saveError = thorwingError { throw saveError }
     }
 }
