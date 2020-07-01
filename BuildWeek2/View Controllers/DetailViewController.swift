@@ -32,7 +32,7 @@ class DetailViewController: UIViewController {
         plant.species = plantSpeciesTextField.text
         plant.h20Frequency = Int16(waterFrequencyTextField.text ?? "0") ?? 0
         apiController.addPlantToDatabase(plant: plant)
-        do{
+        do {
             try CoreDataStack.shared.mainContext.save()
         } catch {
             print("Error saving managed object context: \(error)")
