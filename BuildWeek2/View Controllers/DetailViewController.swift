@@ -20,29 +20,49 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getDetails()
+        updateViews()
     }
     
-    // MARK: - Methods
-    
-    func getDetails() {
-        guard let plantCell = self.plantCell else { return }
-        apiController.fetchPlantsFromDatabase { data in
-            if (try? data.get()) != nil {
-                DispatchQueue.main.async {
-                    self.updateViews(with: plantCell)
+    // MARK: - IBAction
+    @IBAction func buttonTapped(_ sender: UIButton) {
+        guard let nickname = nicknameTextField.text, !nickname.isEmpty,
+        let species = plantSpeciesTextField.text
+            else { return }
+        let h20Frequency = Int16(waterFrequencyTextField.text ?? "0") ?? 0
+        
+            if let plant = self.plantCell{
+                plant.nickname = nickname
+                plant.species = species
+                plant.h20Frequency = h20Frequency
+                self.apiController.addPlantToDatabase(plant: plant)
+                do{
+                    try CoreDataStack.shared.mainContext.save()
+                } catch {
+                    print("Error saving managed object context: \(error)")
+                }
+            } else {
+               let newPlant = Plant(nickname: nickname,
+                                 species: species,
+                                 h20Frequencey: h20Frequency,
+                                 avatarUrl: "",
+                                 happiness: false
+                                 )
+                self.apiController.addPlantToDatabase(plant: newPlant)
+                do{
+                    try CoreDataStack.shared.mainContext.save()
+                } catch {
+                    print("Error saving managed object context: \(error)")
                 }
             }
-        }
+        
+        navigationController?.popViewController(animated: true)
     }
     
-    private func updateViews(with plant: Plant) {
-        nicknameTextField.text = plant.nickname
-        plantSpeciesTextField.text = plant.species
-        waterFrequencyTextField.text = ""
-        happinessSegmentedControl.selectedSegmentIndex = 0
-    }
+    // MARK: - Private Functions
     
-    @IBAction func buttonTapped(_ sender: UIButton) {
+    private func updateViews() {
+        nicknameTextField.text = plantCell?.nickname
+        plantSpeciesTextField.text = plantCell?.species
+        waterFrequencyTextField.text = String(plantCell?.h20Frequency ?? 0) 
     }
 }

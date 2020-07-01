@@ -39,7 +39,7 @@ class APIController {
     typealias NetworkCompletionHandler = (Result<Bool, NetworkError>) -> Void
     
     // MARK: - Initializer
-
+    
     private init() {
         
     }
@@ -58,6 +58,7 @@ class APIController {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
             let jsonData = try encoder.encode(user)
+            print(String(data: jsonData, encoding:  .utf8)!)
             request.httpBody = jsonData
             
             /// URL Data Task
@@ -73,7 +74,7 @@ class APIController {
                     completion(nil)
                     return
                 }
-
+                
                 // Check for Data
                 guard let data = data else {
                     print("Data was not recieved")
@@ -89,14 +90,14 @@ class APIController {
                 do {
                     let decoder = JSONDecoder()
                     self.bearer = try decoder.decode(Bearer.self, from: data)
-                    completion(nil)
+                    completion(self.bearer)
                 } catch {
                     print("Error decoding bearer: \(error)")
                     completion(nil)
                     return
                 }
                 
-                completion(self.bearer)
+                //                completion(self.bearer)
             }.resume()
             
         } catch {
@@ -106,14 +107,56 @@ class APIController {
     }
     
     func signIn(with user: UserRepresentation, completion: @escaping NetworkCompletionHandler) {
+        // Creating URL Request
+        var request = URLRequest(url: signInURL)
+        request.httpMethod = HTTPMethod.post.rawValue
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        do{
+            let encoder = JSONEncoder()
+            let jsonData = try encoder.encode(user)
+            request.httpBody = jsonData
+            
+            URLSession.shared.dataTask(with: request) { (data, response, error) in
+                if let error = error {
+                    print("Sign in failed with error: \(error)")
+                    completion(.failure(.failedSignIn))
+                    return
+                }
+                
+                if let response = response {
+                    print(response)
+                }
+                
+                guard let data = data else{
+                    print("Data was not recieved")
+                    completion(.failure(.failedSignIn))
+                    return
+                }
+                
+                do{
+                    let decoder = JSONDecoder()
+                    self.bearer = try decoder.decode(Bearer.self, from: data)
+                    print(self.bearer)
+                    completion(.success(true))
+                } catch {
+                    print("Error Decoding bearer: \(error)")
+                    completion(.failure(.noToken))
+                    return
+                }
+            } .resume()
+        } catch {
+            print("Error encoding user: \(error)")
+            completion(.failure(.failedSignIn))
+        }
         
     }
     
     // Adding plants to our database / Possibly also called when updating the plant in the database
     func addPlantToDatabase(plant: Plant, completion: @escaping NetworkCompletionHandler = { _ in }) {
-        let requestURL = baseURL.appendingPathComponent(String(plant.id)).appendingPathExtension("json")
+        let requestURL = baseURL.appendingPathComponent("/plants")
         var request = URLRequest(url: requestURL)
-        request.httpMethod = "PUT"
+        request.httpMethod = "POST"
         
         guard let bearer = bearer else {
             print("No bearer token")
@@ -126,17 +169,26 @@ class APIController {
                 completion(.failure(.noRep))
                 return
             }
-            request.httpBody = try JSONEncoder().encode(representation)
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            let jsonData = try encoder.encode(representation)
+            print(String(data: jsonData, encoding:  .utf8)!)
+            request.httpBody = jsonData
+            
         } catch {
             print("Error encoding Plant \(plant): \(error)")
             completion(.failure(.noEncode))
         }
         
-        URLSession.shared.dataTask(with: request) { _, _, error in
+        URLSession.shared.dataTask(with: request) { _, response, error in
             if let error = error {
                 completion(.failure(.otherError))
                 print("Error putting plant to server: \(error)")
                 return
+            }
+            
+            if let response = response {
+                print(response)
             }
             
             DispatchQueue.main.async {
@@ -146,14 +198,25 @@ class APIController {
     }
     
     // Fetching plants from database
-    func fetchPlantsFromDatabase(completion: @escaping NetworkCompletionHandler = { _ in }) {
-        let requestURL = baseURL.appendingPathExtension("json")
+    func fetchPlantsFromDatabase(completion: @escaping (Result<[PlantRepresentation] , NetworkError>) -> Void = { _ in }) {
+        let requestURL = baseURL.appendingPathComponent("/plants")
+        var request = URLRequest(url: requestURL)
+        request.httpMethod = "GET"
+        guard let bearer = bearer else {
+            print("No bearer token")
+            return
+        }
+        request.setValue("Basic \(bearer.token)", forHTTPHeaderField: "Authorization")
         
-        URLSession.shared.dataTask(with: requestURL) { data, _, error in
+        URLSession.shared.dataTask(with: requestURL) { data, response, error in
             if let error = error {
                 print("Error fetching plant(s): \(error)")
                 completion(.failure(.otherError))
                 return
+            }
+            
+            if let response = response {
+                print(response)
             }
             
             guard let data = data else {
@@ -163,11 +226,16 @@ class APIController {
             }
             
             do {
-                let plantRepresentation = Array(try JSONDecoder().decode([Int: PlantRepresentation].self, from: data).values)
-                try self.updatePlants(with: plantRepresentation)
-                DispatchQueue.main.async {
-                    completion(.success(true))
-                }
+//                let decoder = JSONDecoder()
+//                let plantRepresentation = Array(try decoder.decode([Int: PlantRepresentation].self, from: data).values)
+//                try self.updatePlants(with: plantRepresentation)
+//                DispatchQueue.main.async {
+//                    completion(.success(true))
+//                }
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let plantRepresentation = try decoder.decode([PlantRepresentation].self, from: data)
+                completion(.success(plantRepresentation))
             } catch {
                 print("Error decoding plant representation: \(error)")
                 completion(.failure(.noDecode))
@@ -212,7 +280,7 @@ class APIController {
         // Creating a new CoreData context so that we aren't saving to the main context while calling this inside of a URLSession.
         let context = CoreDataStack.shared.container.newBackgroundContext()
         // Creating an array of UUIDs
-        let idsToFetch = representations.compactMap { Int16($0.id) }
+        let idsToFetch = representations.compactMap { Int16($0.id!) }
         let representationByID = Dictionary(uniqueKeysWithValues: zip(idsToFetch, representations))
         //Mutable copy of our dictonary to use for new Objects on the remote that we don't have locally
         var plantsToCreate = representationByID

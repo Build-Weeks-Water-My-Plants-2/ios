@@ -39,6 +39,7 @@
 		0BC01175249B011100DB92FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0BC0117B249B013100DB92FB /* APIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIController.swift; sourceTree = "<group>"; };
 		0BD03E17249D890E001A90C1 /* User+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "User+Convenience.swift"; sourceTree = "<group>"; };
+		0BDAC13524A690330051FEF7 /* UserData 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "UserData 2.xcdatamodel"; sourceTree = "<group>"; };
 		0BFF13C4249C6F9700C8537A /* UserData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserData.xcdatamodel; sourceTree = "<group>"; };
 		0BFF13C6249C72BB00C8537A /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		0BFF13CA249C75B700C8537A /* Plant+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Plant+Convenience.swift"; sourceTree = "<group>"; };
@@ -462,6 +463,7 @@
 		0BFF13C3249C6F9700C8537A /* UserData.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				0BDAC13524A690330051FEF7 /* UserData 2.xcdatamodel */,
 				0BFF13C4249C6F9700C8537A /* UserData.xcdatamodel */,
 			);
 			currentVersion = 0BFF13C4249C6F9700C8537A /* UserData.xcdatamodel */;
