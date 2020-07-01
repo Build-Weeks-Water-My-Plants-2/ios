@@ -26,17 +26,36 @@ class DetailViewController: UIViewController {
     // MARK: - IBAction
     @IBAction func buttonTapped(_ sender: UIButton) {
         guard let nickname = nicknameTextField.text, !nickname.isEmpty,
-            let plant = plantCell
+        let species = plantSpeciesTextField.text
             else { return }
-        plant.nickname = nickname
-        plant.species = plantSpeciesTextField.text
-        plant.h20Frequency = Int16(waterFrequencyTextField.text ?? "0") ?? 0
-        apiController.addPlantToDatabase(plant: plant)
-        do {
-            try CoreDataStack.shared.mainContext.save()
-        } catch {
-            print("Error saving managed object context: \(error)")
-        }
+        let h20Frequency = Int16(waterFrequencyTextField.text ?? "0") ?? 0
+        
+            if let plant = self.plantCell{
+                plant.nickname = nickname
+                plant.species = species
+                plant.h20Frequency = h20Frequency
+                self.apiController.addPlantToDatabase(plant: plant)
+                do{
+                    try CoreDataStack.shared.mainContext.save()
+                } catch {
+                    print("Error saving managed object context: \(error)")
+                }
+            } else {
+               let newPlant = Plant(nickname: nickname,
+                                 species: species,
+                                 h20Frequencey: h20Frequency,
+                                 avatarUrl: "",
+                                 happiness: false
+                                 )
+                self.apiController.addPlantToDatabase(plant: newPlant)
+                do{
+                    try CoreDataStack.shared.mainContext.save()
+                } catch {
+                    print("Error saving managed object context: \(error)")
+                }
+            }
+        
+        navigationController?.popViewController(animated: true)
     }
     
     // MARK: - Private Functions
