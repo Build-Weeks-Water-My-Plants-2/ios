@@ -31,7 +31,7 @@ extension User {
         
         guard let userId = userRepresentation.id,
             let userBearer = userRepresentation.bearer else {
-                print("Error: Missing ")
+                print("Error: Missing User ID or Bearer token")
                 return nil
         }
         

@@ -46,20 +46,21 @@ class PlantTableViewController: UITableViewController {
     // MARK: - IBActions
     
     @IBAction func refreshButtonTapped(_ sender: Any) {
-        apiController.fetchPlantsFromDatabase()
+        //        apiController.fetchPlantsFromDatabase()
         self.tableView.reloadData()
     }
     
     
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        fetchedResultsController.sections?[section].numberOfObjects ?? 0
+//        fetchedResultsController.sections?[section].numberOfObjects ?? 0
+        0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PlantCell", for: indexPath) as? PlantTableViewCell else { return UITableViewCell() }
-        cell.plant = fetchedResultsController.object(at: indexPath)
-        return cell
+//        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PlantCell", for: indexPath) as? PlantTableViewCell else { return UITableViewCell() }
+//        cell.plant = fetchedResultsController.object(at: indexPath)
+        return UITableViewCell()
     }
     
     // Override to support editing the table view.

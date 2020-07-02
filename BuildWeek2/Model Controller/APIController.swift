@@ -58,7 +58,7 @@ class APIController {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
             let jsonData = try encoder.encode(user)
-            print(String(data: jsonData, encoding:  .utf8)!)
+            print(String(data: jsonData, encoding: .utf8)!)
             request.httpBody = jsonData
             
             /// URL Data Task
@@ -112,12 +112,12 @@ class APIController {
         request.httpMethod = HTTPMethod.post.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        do{
+        do {
             let encoder = JSONEncoder()
             let jsonData = try encoder.encode(user)
             request.httpBody = jsonData
             
-            URLSession.shared.dataTask(with: request) { (data, response, error) in
+            URLSession.shared.dataTask(with: request) { data, response, error in
                 if let error = error {
                     print("Sign in failed with error: \(error)")
                     completion(.failure(.failedSignIn))
@@ -128,13 +128,13 @@ class APIController {
                     print(response)
                 }
                 
-                guard let data = data else{
+                guard let data = data else {
                     print("Data was not recieved")
                     completion(.failure(.failedSignIn))
                     return
                 }
                 
-                do{
+                do {
                     let decoder = JSONDecoder()
                     self.bearer = try decoder.decode(Bearer.self, from: data)
                     print(self.bearer)
@@ -172,7 +172,7 @@ class APIController {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
             let jsonData = try encoder.encode(representation)
-            print(String(data: jsonData, encoding:  .utf8)!)
+            print(String(data: jsonData, encoding: .utf8)!)
             request.httpBody = jsonData
             
         } catch {
@@ -303,6 +303,5 @@ class APIController {
                 print("Error fetching plants for ids: \(error)")
             }
         }
-        try CoreDataStack.shared.save()
-    }
+        try CoreDataStack.shared.save()}
 }

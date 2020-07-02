@@ -29,20 +29,20 @@ class CoreDataStack {
     // MARK: - Methods
     
     func save(context: NSManagedObjectContext = CoreDataStack.shared.mainContext) throws {
-        var thorwingError: Error?
+        var throwingError: Error?
         
         if context.hasChanges {
             context.performAndWait {
                 do {
                     try context.save()
                 } catch {
-                    thorwingError = error
+                    throwingError = error
                 }
             }
         } else {
             print("No changes in moc to save.")
         }
         
-        if let saveError = thorwingError { throw saveError }
+        if let saveError = throwingError { throw saveError }
     }
 }
