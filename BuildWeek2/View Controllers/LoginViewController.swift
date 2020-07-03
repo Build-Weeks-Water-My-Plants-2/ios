@@ -1,4 +1,5 @@
 import UIKit
+import CoreDataStack
 
 class LoginViewController: UIViewController {
     
@@ -11,7 +12,7 @@ class LoginViewController: UIViewController {
     
     // MARK: - Properties
     
-//    let userController = UserController.shared
+    let apiController = APIController.shared
     var loginType = LoginType.signUp
     let moc = CoreDataStack.shared.mainContext
     
@@ -21,7 +22,7 @@ class LoginViewController: UIViewController {
     
     @IBOutlet private weak var usernameTextField: UITextField!
     @IBOutlet private weak var passwordTextField: UITextField!
-    @IBOutlet private weak var loginSegementedController: UISegmentedControl!
+    @IBOutlet weak var loginSegementedController: UISegmentedControl!
     @IBOutlet private weak var signInButton: UIButton!
     
     // MARK: - App Lifecycle
@@ -33,38 +34,59 @@ class LoginViewController: UIViewController {
     // MARK: - IBActions
     
     @IBAction func buttonTapped(_ sender: UIButton) {
-        guard let inputedUsername = usernameTextField.text,
-            !inputedUsername.isEmpty,
-            let inputedPassword = passwordTextField.text,
-            !inputedPassword.isEmpty else {
-                print("Empty text fields")
+        guard let inputedUsername = usernameTextField.text, !inputedUsername.isEmpty,
+            let inputedPassword = passwordTextField.text, !inputedPassword.isEmpty else {
+                print("Bad input")
                 return
         }
-        
-        let tempUser = UserRepresentation( id: nil,
-                                           username: inputedUsername,
-                                           password: inputedPassword,
-                                           phoneNumber: nil,
-                                           avatarUrl: nil,
-                                           bearer: nil )
-        
-//        userController.signUp(userRep: tempUser) { bool, bearer in
-//            if bool == false {
-//                print("bad signup")
-//                return
-//            } else {
-//                guard let bearer = bearer else { return }
-//                let createdUser = User(userRepresentation: tempUser)
-//                createdUser?.bearer = bearer.token
-//                do {
-//                    try self.moc.save()
-//                } catch {
-//                    print("Error saving new User.")
-//                }
-//            }
-//        }
+        let newUser = UserRepresentation(id: nil,
+                                         username: inputedUsername,
+                                         password: inputedPassword,
+                                         phoneNumber: nil,
+                                         avatarUrl: nil,
+                                         bearer: apiController.bearer?.token)
+        if loginType == .signUp {
+            apiController.signUp(with: newUser) { bearerToken in
+                do {
+                    try self.moc.save()
+                } catch {
+                    print("Error saving newly created User")
+                    return
+                }
+            }
+            let alertController = UIAlertController(title: "Sign Up Successful", message: "Now please log in", preferredStyle: .alert)
+            let alertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+            alertController.addAction(alertAction)
+            self.present(alertController, animated: true) {
+                self.loginType = .signIn
+                self.loginSegementedController.selectedSegmentIndex = 1
+                self.signInButton.setTitle("Sign In", for: .normal)
+            }
+        } else {
+            apiController.signIn(with: newUser) { result in
+                do {
+                    let success = try result.get()
+                    if success{
+                        DispatchQueue.main.async {
+                            self.dismiss(animated: true, completion: nil)
+                        }
+                    }
+                } catch {
+                    if let error = error as? APIController.NetworkError {
+                        switch error {
+                        case .failedSignIn:
+                            print("sign in failed")
+                        case .noToken, .noData:
+                            print("no data recieved")
+                        default:
+                            print("Other error occured")
+                        }
+                    }
+                }
+            }
+            self.dismiss(animated: true, completion: nil)
+        }
     }
-    
     @IBAction func loginTypeChanged(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
             loginType = .signUp
@@ -74,4 +96,5 @@ class LoginViewController: UIViewController {
             signInButton.setTitle("Sign In", for: .normal)
         }
     }
+    
 }

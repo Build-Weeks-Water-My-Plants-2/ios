@@ -4,7 +4,7 @@
         <attribute name="avatarUrl" optional="YES" attributeType="String"/>
         <attribute name="h20Frequency" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="happiness" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="id" optional="YES" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 16" usesScalarValueType="NO"/>
         <attribute name="lastWateredAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="nickname" attributeType="String"/>
         <attribute name="species" optional="YES" attributeType="String"/>
@@ -13,8 +13,8 @@
     </entity>
     <entity name="User" representedClassName="User" syncable="YES" codeGenerationType="class">
         <attribute name="avatarUrl" optional="YES" attributeType="String"/>
-        <attribute name="bearer" attributeType="String"/>
-        <attribute name="id" attributeType="String"/>
+        <attribute name="bearer" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="password" attributeType="String"/>
         <attribute name="phoneNumber" optional="YES" attributeType="String"/>
         <attribute name="username" attributeType="String"/>
