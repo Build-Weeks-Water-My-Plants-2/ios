@@ -19,14 +19,14 @@ class CoreDataHelper {
             return
          }
          
-         temporaryPlants.forEach { (plant) in
+         temporaryPlants.forEach { plant in
             context.delete(plant)
          }
          
          // Updating existing Plants and adding new Plants
                   
          let ids = representations.compactMap { representation -> Int? in
-            return representation.id
+            representation.id
          }
          
          let representationByID = Dictionary(uniqueKeysWithValues: zip(ids, representations))
@@ -52,7 +52,7 @@ class CoreDataHelper {
          // Adding new Plants
          let newPlantRepresentations = representations.filter { candidate -> Bool in
             let contains = existingPlants.contains { plant -> Bool in
-               return plant.id?.intValue == candidate.id
+                plant.id?.intValue == candidate.id
             }
             return !contains
          }

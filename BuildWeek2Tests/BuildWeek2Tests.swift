@@ -12,7 +12,7 @@ class BuildWeek2Tests: XCTestCase {
       controller.signIn(with: userRepresentation) { result in
          do {
             _ = try result.get()
-            XCTFail()
+            XCTFail("Failed Empty User Test")
          } catch {
             XCTAssertEqual(error as? APIController.NetworkError, APIController.NetworkError.emptyUser)
          }
@@ -29,7 +29,7 @@ class BuildWeek2Tests: XCTestCase {
       controller.signIn(with: userRepresentation) { result in
          do {
             _ = try result.get()
-            XCTFail()
+            XCTFail("Failed Empty Password Test")
          } catch {
             XCTAssertEqual(error as? APIController.NetworkError, APIController.NetworkError.emptyPassword)
          }
@@ -45,7 +45,7 @@ class BuildWeek2Tests: XCTestCase {
       controller.signIn(with: userRepresentation) { _ in }
       
       guard let lastRequest = session.lastRequest else {
-         XCTFail()
+         XCTFail("Failed Sign in HTTP Method Test")
          return
       }
       
@@ -61,7 +61,7 @@ class BuildWeek2Tests: XCTestCase {
       controller.signIn(with: userRepresentation) { _ in }
       
       guard let lastRequest = session.lastRequest, let contentType = lastRequest.allHTTPHeaderFields?["Content-Type"] else {
-         XCTFail()
+         XCTFail("Failed Content Type Test")
          return
       }
             
@@ -85,7 +85,7 @@ class BuildWeek2Tests: XCTestCase {
       controller.addPlantToDatabase(plantRepresentation: plantRepresentation) { result in
          do {
             _ = try result.get()
-            XCTFail()
+            XCTFail("Failed Plant database test")
          } catch {
             XCTAssertEqual(error as? APIController.NetworkError, APIController.NetworkError.idIsNotEmptyForNewPlant)
          }
@@ -109,7 +109,7 @@ class BuildWeek2Tests: XCTestCase {
       controller.addPlantToDatabase(plantRepresentation: plantRepresentation) { result in
          do {
             _ = try result.get()
-            XCTFail()
+            XCTFail("Failed no token test")
          } catch {
             XCTAssertEqual(error as? APIController.NetworkError, APIController.NetworkError.noToken)
          }
@@ -135,7 +135,7 @@ class BuildWeek2Tests: XCTestCase {
       controller.addPlantToDatabase(plantRepresentation: plantRepresentation)
       
       guard let lastRequest = session.lastRequest, let contentType = lastRequest.allHTTPHeaderFields?["Content-Type"] else {
-         XCTFail()
+         XCTFail("Failed add to database test")
          return
       }
       
@@ -159,7 +159,7 @@ class BuildWeek2Tests: XCTestCase {
       controller.deletePlantsFromDatabase(plantRepresentation) { result in
          do {
             _ = try result.get()
-            XCTFail()
+            XCTFail("Failed delete from database test.")
          } catch {
             XCTAssertEqual(error as? APIController.NetworkError, APIController.NetworkError.noIdentifier)
          }
@@ -183,7 +183,7 @@ class BuildWeek2Tests: XCTestCase {
       controller.deletePlantsFromDatabase(plantRepresentation) { result in
          do {
             _ = try result.get()
-            XCTFail()
+            XCTFail("Failed No Token Delete Test")
          } catch {
             XCTAssertEqual(error as? APIController.NetworkError, APIController.NetworkError.noToken)
          }
@@ -209,7 +209,7 @@ class BuildWeek2Tests: XCTestCase {
       controller.deletePlantsFromDatabase(plantRepresentation)
       
       guard let lastRequest = session.lastRequest else {
-         XCTFail()
+         XCTFail("Failed Delete Plants Test")
          return
       }
       

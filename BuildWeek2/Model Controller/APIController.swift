@@ -65,7 +65,7 @@ class APIController {
          return
       }
       
-      let dataTask = session.testableDataTask(with: request) { [weak self] data, response, error in
+      let dataTask = session.testableDataTask(with: request) { [weak self] data, _, error in
          guard let self = self else {
             completion(nil)
             return
@@ -126,20 +126,20 @@ class APIController {
          return
       }
       
-      let dataTask = session.testableDataTask(with: request) { (data, response, error) in
+      let dataTask = session.testableDataTask(with: request) { data, _, error in
          if let error = error {
             print("Sign in failed with error: \(error)")
             completion(.failure(.failedSignIn))
             return
          }
          
-         guard let data = data else{
+         guard let data = data else {
             print("Data was not recieved")
             completion(.failure(.failedSignIn))
             return
          }
          
-         do{
+         do {
             let decoder = JSONDecoder()
             self.bearer = try decoder.decode(Bearer.self, from: data)
             completion(.success(true))
@@ -182,7 +182,7 @@ class APIController {
          return
       }
       
-      let dataTask = session.testableDataTask(with: request) { data, response, error in
+      let dataTask = session.testableDataTask(with: request) { _, _, error in
          if let error = error {
             completion?(.failure(.otherError))
             print("Error putting plant to server: \(error)")
@@ -212,7 +212,7 @@ class APIController {
       
       request.setValue("Basic \(bearer.token)", forHTTPHeaderField: "Authorization")
             
-      let dataTask = session.testableDataTask(with: request) { data, response, error in
+      let dataTask = session.testableDataTask(with: request) { data, _, error in
          if let error = error {
             print("Error fetching plant(s): \(error)")
             completion?(.failure(.otherError))

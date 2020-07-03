@@ -34,7 +34,7 @@ class DetailViewController: UIViewController {
          plant.h20Frequency = h20Frequency
          guard let representation = plant.plantRepresentation else { return }
          self.apiController.addPlantToDatabase(plantRepresentation: representation)
-         do{
+         do {
             try CoreDataStack.shared.mainContext.save()
          } catch {
             print("Error saving managed object context: \(error)")
@@ -47,7 +47,7 @@ class DetailViewController: UIViewController {
       
       guard let representation = newPlant.plantRepresentation else { return }
       self.apiController.addPlantToDatabase(plantRepresentation: representation)
-      do{
+      do {
          try CoreDataStack.shared.mainContext.save()
       } catch {
          print("Error saving managed object context: \(error)")

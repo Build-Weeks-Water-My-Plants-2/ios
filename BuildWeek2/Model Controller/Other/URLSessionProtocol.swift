@@ -6,7 +6,6 @@ protocol URLSessionProtocol {
 
 extension URLSession: URLSessionProtocol {
    func testableDataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTaskProtocol {
-      return dataTask(with: request, completionHandler: completionHandler)
+      dataTask(with: request, completionHandler: completionHandler)
    }
 }
-

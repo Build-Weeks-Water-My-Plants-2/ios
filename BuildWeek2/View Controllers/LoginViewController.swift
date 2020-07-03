@@ -22,7 +22,7 @@ class LoginViewController: UIViewController {
     
     @IBOutlet private weak var usernameTextField: UITextField!
     @IBOutlet private weak var passwordTextField: UITextField!
-    @IBOutlet weak var loginSegementedController: UISegmentedControl!
+    @IBOutlet private weak var loginSegementedController: UISegmentedControl!
     @IBOutlet private weak var signInButton: UIButton!
     
     // MARK: - App Lifecycle
@@ -34,8 +34,10 @@ class LoginViewController: UIViewController {
     // MARK: - IBActions
     
     @IBAction func buttonTapped(_ sender: UIButton) {
-        guard let inputedUsername = usernameTextField.text, !inputedUsername.isEmpty,
-            let inputedPassword = passwordTextField.text, !inputedPassword.isEmpty else {
+        guard let inputedUsername = usernameTextField.text,
+            !inputedUsername.isEmpty,
+            let inputedPassword = passwordTextField.text,
+            !inputedPassword.isEmpty else {
                 print("Bad input")
                 return
         }
@@ -46,7 +48,7 @@ class LoginViewController: UIViewController {
                                          avatarUrl: nil,
                                          bearer: apiController.bearer?.token)
         if loginType == .signUp {
-            apiController.signUp(with: newUser) { bearerToken in
+            apiController.signUp(with: newUser) { _ in
                 do {
                     try self.moc.save()
                 } catch {
@@ -66,7 +68,7 @@ class LoginViewController: UIViewController {
             apiController.signIn(with: newUser) { result in
                 do {
                     let success = try result.get()
-                    if success{
+                    if success {
                         DispatchQueue.main.async {
                             self.dismiss(animated: true, completion: nil)
                         }
@@ -87,6 +89,7 @@ class LoginViewController: UIViewController {
             self.dismiss(animated: true, completion: nil)
         }
     }
+    
     @IBAction func loginTypeChanged(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
             loginType = .signUp
@@ -96,5 +99,4 @@ class LoginViewController: UIViewController {
             signInButton.setTitle("Sign In", for: .normal)
         }
     }
-    
 }
